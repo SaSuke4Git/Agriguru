@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriGuru | Smart Farming Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --agri-green: #2e7d32;
+            --agri-blue: #1565c0;
+            --agri-gold: #ff8f00;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .feature-card {
+            transition: transform 0.3s;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .state-card-base{
+          background-size: cover;
+          background-position: center;
+          border-radius: 6px;
+          overflow: hidden;
+          transition: transform 0.2s;
+          height: 350px;
+          
+        }
+
+        .state-card-base:hover{
+          transform: scale(1.1);
+          
+          
+        }
+
+        .card-body1{
+          background-size: cover;
+          background-position: center;
+          border-radius: 6px;
+          overflow: hidden;
+          transition: transform 0.2s;
+          display: flex;
+          flex-direction: column;     /* Stack elements vertically */
+          align-items: center;        /* Center horizontally */
+          justify-content: center;    /* Center vertically (if height allows) */
+          text-align: center;         /* Center text inside elements like <p>, <h3> */
+          padding: 5px;
+          
+          
+        }
+
+        
+        
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--agri-green);
+            margin-bottom: 1rem;
+        }
+        
+        .crop-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .crop-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .crop-img {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .weather-card {
+            background: linear-gradient(135deg, #56CCF2, #2F80ED);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .state-card {
+            border-left: 5px solid var(--agri-green);
+            transition: all 0.3s;
+        }
+        
+        .state-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="https://cdn-icons-png.flaticon.com/512/3063/3063512.png" alt="Logo" width="40" height="40" class="d-inline-block align-top me-2">
+                AgriGuru
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#states">States</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#crops">Crops</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#weather">Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#market">Market</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-4">State-Wise Crop Intelligence</h1>
+            <p class="lead mb-5">AI-powered recommendations tailored to your state's soil and climate</p>
+            <a href="#recommendation" class="btn btn-warning btn-lg px-4 me-2">Get Personalized Advice</a>
+            <a href="#states" class="btn btn-outline-light btn-lg px-4">Explore States</a>
+        </div>
+    </section>
+
+    <!-- States Section -->
+    <section id="states" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Indian States <span class="text-success">Crop Data</span></h2>
+            <div class="row g-4" id="statesContainer">
+                <!-- States will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Crop Recommendation Section -->
+    <section id="recommendation" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Crop <span class="text-success">Recommendation</span></h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Enter Your Farm Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="cropForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Select State</label>
+                                    <select class="form-select" id="stateSelect">
+                                        <option value="">Select State</option>
+                                        <!-- Options will be dynamically loaded -->
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Soil Type</label>
+                                    <select class="form-select" id="soilType">
+                                        <option value="">Select Soil Type</option>
+                                        <option>Alluvial</option>
+                                        <option>Black (Regur)</option>
+                                        <option>Clayey</option>
+                                        <option>Laterite</option>
+                                        <option>Loamy</option>
+                                        <option>Peaty</option>
+                                        <option>Perennial</option>
+                                        <option>Red</option>
+                                        <option>Sandy</option>                 
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Season</label>
+                                    <select class="form-select" id="season">
+                                        <option value="">Select Season</option>
+                                        <option>Kharif (June-October)</option>
+                                        <option>Rabi (November-April)</option>
+                                        <option>Zaid (March-June)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Land Area (acres)</label>
+                                    <input type="number" class="form-control" id="landArea" placeholder="Enter land area">
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Get Recommendation</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Recommended Crops</h4>
+                        </div>
+                        <div style="display: flex;justify-content: center;align-items: center;"class="card-body">
+                            <div class="text-center py-4" id="resultPlaceholder">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3163/3163473.png" width="200" alt="Recommendation">
+                                <p class="mt-3">Fill the form to get crop recommendations</p>
+                            </div>
+                            <div id="recommendationResults" style="display: none;">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Section -->
+    <section id="weather" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Weather <span class="text-success">Forecast</span></h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="weather-card card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h3 class="mb-1">Today</h3>
+                                    <p class="mb-0" id="weatherLocation">Loading location...</p>
+                                </div>
+                                <div class="display-4" id="weatherTemp">--°C</div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-cloud-sun me-3 fa-2x"></i>
+                                <div>
+                                    <p class="mb-0" id="weatherCondition">Loading...</p>
+                                    <small id="weatherDetails">Humidity: --% | Wind: -- km/h</small>
+                                </div>
+                            </div>
+                            <div class="row text-center mt-4" id="weatherForecast">
+                                <!-- Forecast will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Agricultural Alerts</h4>
+                        </div>
+                        <div class="card-body" id="agriAlerts">
+                            <!-- Alerts will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Prices Section -->
+    <section id="market" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Market <span class="text-success">Prices</span></h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Top Commodities</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="priceTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Crop</th>
+                                            <th>Price (₹/q)</th>
+                                            <th>Change</th>
+                                            <th>Best Market</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Prices will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Nearby Markets</h4>
+                        </div>
+                        <div class="card-body">
+                            <div id="marketMap" style="height: 300px; border-radius: 8px;"></div>
+                            <div class="mt-3">
+                                <h5>Transport Advisory</h5>
+                                <p id="transportAdvisory">Loading market data...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>AgriGuru</h5>
+                    <p>Smart farming solutions for the digital age.</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="#states" class="text-white">States</a></li>
+                        <li><a href="#crops" class="text-white">Crops</a></li>
+                        <li><a href="#weather" class="text-white">Weather</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Resources</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Farming Guides</a></li>
+                        <li><a href="#" class="text-white">Government Schemes</a></li>
+                        <li><a href="#" class="text-white">Research Papers</a></li>
+                        <li><a href="#" class="text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> New Delhi, India</li>
+                        <li><i class="fas fa-phone me-2"></i> +91 9876543210</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@agriguru.in</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">© 2023 AgriGuru by DataVelopers. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        // State-wise crop data
+      const statesData = [
+  {
+    name: "Andhra Pradesh",
+    state_image:"https://www.shutterstock.com/image-vector/andhra-pradesh-3d-district-map-600nw-2254250595.jpg",
+    soil_types: ["Red", "Black"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 25,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 30,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Vijayawada"],
+    climate: "Tropical",
+    coordinates: [15.9129, 79.7400]
+    
+  },
+  {
+    name: "Arunachal Pradesh",
+    state_image:"http://shutterstock.com/image-vector/3d-map-arunachal-pradesh-state-260nw-1696176541.jpg",
+    soil_types: ["Mountain", "Alluvial"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 20,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 18,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Itanagar"],
+    climate: "Mountain/Subtropical",
+    coordinates: [28.2180, 94.7278]
+  },
+  {
+    name: "Assam",
+    state_image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmqIwIPfeOGqXwPPtYE-EQw4FzgEbqA7JfTA&s",
+    soil_types: ["Alluvial", "Peaty"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 22,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Tea",
+        scientific_name: "Camellia sinensis",
+        seasons: ["Perennial"],
+        temperature_range: [13, 30],
+        rainfall_requirements: [120, 250],
+        ph_range: [4.5, 5.5],
+        yield_per_acre: 1500,
+        image: "https://img500.exportersindia.com/product_images/bc-500/2023/2/6888152/dried-tea-leaves-1676457294-6763867.jpeg"
+      }
+    ],
+    best_markets: ["Guwahati"],
+    climate: "Humid Subtropical",
+    coordinates: [26.2006, 92.9376]
+  },
+  {
+    name: "Bihar",
+    state_image:"https://img.freepik.com/premium-vector/bihar-3d-district-map-is-state-india_667085-235.jpg",
+    soil_types: ["Alluvial"],
+    major_crops: [
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 18,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 20,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Patna"],
+    climate: "Subtropical",
+    coordinates: [25.0961, 85.3131]
+  },
+  {
+    name: "Chhattisgarh",
+    state_image:"https://as1.ftcdn.net/jpg/05/64/90/76/1000_F_564907614_bltcfUSgevBr19tls07rLNx3g5q8DR16.jpg",
+    soil_types: ["Red", "Laterite", "Alluvial"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 24,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Pulses",
+        scientific_name: "Various",
+        seasons: ["Rabi"],
+        temperature_range: [15, 25],
+        rainfall_requirements: [40, 60],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 8,
+        image: "https://chrysalishigh.com/wp-content/uploads/2024/01/pulses.jpg"
+      }
+    ],
+    best_markets: ["Raipur"],
+    climate: "Tropical",
+    coordinates: [21.2787, 81.8661]
+  },
+  {
+    name: "Goa",
+    state_image:"https://img.freepik.com/premium-vector/goa-3d-district-map-is-state-india_667085-241.jpg",
+    soil_types: ["Laterite", "Alluvial"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 20,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Cashew",
+        scientific_name: "Anacardium occidentale",
+        seasons: ["Perennial"],
+        temperature_range: [24, 28],
+        rainfall_requirements: [100, 200],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 10,
+        image: "https://media.istockphoto.com/id/171356441/photo/cashews.jpg?s=612x612&w=0&k=20&c=ixKBUXUafuqtAAgkUYbzZXBA6BrwJNfpGnlQUXjYlq4="
+      }
+    ],
+    best_markets: ["Panaji"],
+    climate: "Coastal Humid",
+    coordinates: [15.2993, 74.1240]
+  },
+  {
+    name: "Gujarat",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/539/non_2x/gujarat-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Black", "Alluvial", "Saline"],
+    major_crops: [
+      {
+        name: "Cotton",
+        scientific_name: "Gossypium hirsutum",
+        seasons: ["Kharif"],
+        temperature_range: [21, 30],
+        rainfall_requirements: [50, 120],
+        ph_range: [6.0, 7.0],
+        yield_per_acre: 9,
+        image: "https://thumbs.dreamstime.com/b/process-making-cotton-raw-cotton-basket-66651270.jpg"
+      },
+      {
+        name: "Groundnut",
+        scientific_name: "Arachis hypogaea",
+        seasons: ["Kharif"],
+        temperature_range: [25, 30],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 8,
+        image: "https://www.jiomart.com/images/product/original/590002405/roasted-groundnut-500-g-product-images-o590002405-p590910373-0-202412250841.jpg?im=Resize=(420,420)"
+      }
+    ],
+    best_markets: ["Ahmedabad"],
+    climate: "Semi-Arid",
+    coordinates: [22.2587, 71.1924]
+  },
+  {
+    name: "Haryana",
+    state_image:"https://thumbs.dreamstime.com/b/d-map-haryana-state-india-d-map-state-india-template-your-design-184475037.jpg",
+    soil_types: ["Alluvial", "Loamy", "Alkaline"],
+    major_crops: [
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 20,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 22,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Karnal"],
+    climate: "Semi-Arid",
+    coordinates: [29.0588, 76.0856]
+  },
+  {
+    name: "Himachal Pradesh",
+    state_image:"https://img.freepik.com/premium-vector/himachal-pradesh-3d-district-map-is-state-india_667085-245.jpg",
+    soil_types: ["Mountain", "Alluvial"],
+    major_crops: [
+      {
+        name: "Apple",
+        scientific_name: "Malus domestica",
+        seasons: ["Perennial"],
+        temperature_range: [5, 24],
+        rainfall_requirements: [100, 125],
+        ph_range: [5.5, 6.5],
+        yield_per_acre: 10,
+        image: "https://img.lb.wbmdstatic.com/vim/live/webmd/consumer_assets/site_images/articles/health_tools/healing_foods_slideshow/1800ss_getty_rf_apples.jpg?resize=750px:*&output-quality=75"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 15,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Shimla"],
+    climate: "Mountain Temperate",
+    coordinates: [31.1048, 77.1734]
+  },
+  {
+    name: "Jharkhand",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/527/non_2x/jharkhand-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Red", "Laterite", "Forest"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 18,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Pulses",
+        scientific_name: "Various",
+        seasons: ["Rabi"],
+        temperature_range: [15, 25],
+        rainfall_requirements: [40, 60],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 7,
+        image: "https://chrysalishigh.com/wp-content/uploads/2024/01/pulses.jpg"
+      }
+    ],
+    best_markets: ["Ranchi"],
+    climate: "Tropical",
+    coordinates: [23.6102, 85.2799]
+  },
+  {
+    name: "Karnataka",
+    state_image:"https://img.freepik.com/premium-vector/karnataka-3d-district-map-is-state-india_667085-248.jpg",
+    soil_types: ["Red", "Black", "Laterite"],
+    major_crops: [
+      {
+        name: "Ragi (Finger Millet)",
+        scientific_name: "Eleusine coracana",
+        seasons: ["Kharif"],
+        temperature_range: [20, 30],
+        rainfall_requirements: [50, 100],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 8,
+        image: "https://aarogyamastu.in/wp-content/uploads/2022/06/fingermillet.webp"
+      },
+      {
+        name: "Coffee",
+        scientific_name: "Coffea arabica",
+        seasons: ["Perennial"],
+        temperature_range: [15, 28],
+        rainfall_requirements: [150, 250],
+        ph_range: [6.0, 6.5],
+        yield_per_acre: 800,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQANUaonQdOQLC0I6nTb2mXrwb3knd-HeAuNA&s"
+      }
+    ],
+    best_markets: ["Bengaluru"],
+    climate: "Tropical",
+    coordinates: [15.3173, 75.7139]
+  },
+  {
+    name: "Kerala",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/536/non_2x/kerala-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Laterite", "Alluvial", "Peaty"],
+    major_crops: [
+      {
+        name: "Rubber",
+        scientific_name: "Hevea brasiliensis",
+        seasons: ["Perennial"],
+        temperature_range: [25, 35],
+        rainfall_requirements: [200, 300],
+        ph_range: [4.5, 6.0],
+        yield_per_acre: 1500,
+        image: "https://static.toiimg.com/photo/110183615.cms"
+      },
+      {
+        name: "Coconut",
+        scientific_name: "Cocos nucifera",
+        seasons: ["Perennial"],
+        temperature_range: [27, 32],
+        rainfall_requirements: [100, 300],
+        ph_range: [5.2, 8.0],
+        yield_per_acre: 10000,
+        image: "https://www.jiomart.com/images/product/original/590000086/big-coconut-1-pc-approx-350-g-600-g-product-images-o590000086-p590000086-0-202408070949.jpg?im=Resize=(420,420)"
+      }
+    ],
+    best_markets: ["Kochi"],
+    climate: "Tropical",
+    coordinates: [10.8505, 76.2711]
+  },
+  {
+    name: "Madhya Pradesh",
+    state_image:"https://i.pinimg.com/736x/e7/aa/01/e7aa010b74e6183a99d2916924a783f7.jpg",
+    soil_types: ["Black", "Alluvial", "Red"],
+    major_crops: [
+      {
+        name: "Soybean",
+        scientific_name: "Glycine max",
+        seasons: ["Kharif"],
+        temperature_range: [26, 30],
+        rainfall_requirements: [60, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 10,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9tRQqd3ydSbf7UF9TNFKtqYIVdAD0P9Bf6vA7GZsyFe2Q3yxPG6h2nj-aLnWi_yQDgzs&usqp=CAU"
+      },
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 19,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      }
+    ],
+    best_markets: ["Indore"],
+    climate: "Subtropical",
+    coordinates: [22.9734, 78.6569]
+  },
+  {
+    name: "Maharashtra",
+    state_image:"https://as2.ftcdn.net/jpg/05/64/90/77/1000_F_564907711_fnQmUbcobInI1WF36m90W67Eyah4Ep8x.jpg ",
+    soil_types: ["Black", "Laterite", "Red"],
+    major_crops: [
+      {
+        name: "Cotton",
+        scientific_name: "Gossypium hirsutum",
+        seasons: ["Kharif"],
+        temperature_range: [21, 30],
+        rainfall_requirements: [50, 120],
+        ph_range: [6.0, 7.0],
+        yield_per_acre: 9,
+        image: "https://thumbs.dreamstime.com/b/process-making-cotton-raw-cotton-basket-66651270.jpg"
+      },
+      {
+        name: "Sugarcane",
+        scientific_name: "Saccharum officinarum",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [25, 32],
+        rainfall_requirements: [150, 200],
+        ph_range: [6.5, 7.5],
+        yield_per_acre: 350,
+        image: "https://cdn.pixabay.com/photo/2020/07/09/20/00/sugarcane-5388614_1280.jpg"
+      }
+    ],
+    best_markets: ["Pune"],
+    climate: "Tropical",
+    coordinates: [19.7515, 75.7139]
+  },
+  {
+    name: "Manipur",
+    state_image:"https://img.freepik.com/premium-vector/manipur-3d-district-map-is-state-india_667085-256.jpg",
+    soil_types: ["Red", "Alluvial", "Forest"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 18,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 15,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Imphal"],
+    climate: "Mountain",
+    coordinates: [24.6637, 93.9063]
+  },
+  {
+    name: "Meghalaya",
+    state_image:"https://static.vecteezy.com/system/resources/previews/008/052/842/non_2x/3d-map-state-of-india-vector.jpg",
+    soil_types: ["Laterite", "Forest", "Alluvial"],
+    major_crops: [
+      {
+        name: "Potato",
+        scientific_name: "Solanum tuberosum",
+        seasons: ["Rabi"],
+        temperature_range: [15, 20],
+        rainfall_requirements: [50, 75],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 120,
+        image: "https://t3.ftcdn.net/jpg/04/52/75/46/360_F_452754668_F8QX82iY9YCEeywoXa7KSLufO03eY4G3.jpg"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 18,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Shillong"],
+    climate: "Humid Subtropical",
+    coordinates: [25.4670, 91.3662]
+  },
+  {
+    name: "Mizoram",
+    state_image:"https://img.freepik.com/premium-vector/mizoram-3d-district-map-is-state-india_667085-260.jpg",
+    soil_types: ["Red", "Forest", "Laterite"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 16,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 12,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Aizawl"],
+    climate: "Mountain",
+    coordinates: [23.1645, 92.9376]
+  },
+  {
+    name: "Nagaland",
+    state_image:"https://img.freepik.com/premium-vector/nagaland-3d-district-map-is-state-india_667085-262.jpg",
+    soil_types: ["Red", "Forest", "Alluvial"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 15,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Maize",
+        scientific_name: "Zea mays",
+        seasons: ["Kharif"],
+        temperature_range: [18, 27],
+        rainfall_requirements: [60, 120],
+        ph_range: [5.5, 7.0],
+        yield_per_acre: 10,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s"
+      }
+    ],
+    best_markets: ["Kohima"],
+    climate: "Mountain",
+    coordinates: [26.1584, 94.5624]
+  },
+  {
+    name: "Odisha",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/520/non_2x/odisha-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Red", "Laterite", "Alluvial"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 22,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Pulses",
+        scientific_name: "Various",
+        seasons: ["Rabi"],
+        temperature_range: [15, 25],
+        rainfall_requirements: [40, 60],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 7,
+        image: "https://chrysalishigh.com/wp-content/uploads/2024/01/pulses.jpg"
+      }
+    ],
+    best_markets: ["Bhubaneswar"],
+    climate: "Tropical",
+    coordinates: [20.9517, 85.0985]
+  },
+  {
+    name: "Punjab",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/524/non_2x/punjab-3d-district-map-is-a-state-of-india-vector.jpg ",
+    soil_types: ["Alluvial", "Loamy", "Alkaline"],
+    major_crops: [
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 22,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 26,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Ludhiana"],
+    climate: "Continental",
+    coordinates: [31.1471, 75.3412]
+  },
+  {
+    name: "Rajasthan",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/528/non_2x/rajasthan-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Sandy", "Loamy", "Desert", "Alkaline"],
+    major_crops: [
+      {
+        name: "Bajra (Pearl Millet)",
+        scientific_name: "Pennisetum glaucum",
+        seasons: ["Kharif"],
+        temperature_range: [25, 35],
+        rainfall_requirements: [40, 60],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 7,
+        image: "https://justorganik.com/wp-content/uploads/2024/04/bajra.png"
+      },
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 13,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      }
+    ],
+    best_markets: ["Jaipur"],
+    climate: "Arid/Semi-Arid",
+    coordinates: [27.0238, 74.2179]
+  },
+  {
+    name: "Sikkim",
+    state_image:"https://www.shutterstock.com/image-vector/3d-map-sikkim-state-india-260nw-1696176568.jpg",
+    soil_types: ["Mountain", "Forest", "Alluvial"],
+    major_crops: [
+      {
+        name: "Cardamom",
+        scientific_name: "Elettaria cardamomum",
+        seasons: ["Perennial"],
+        temperature_range: [10, 25],
+        rainfall_requirements: [100, 200],
+        ph_range: [5.5, 6.5],
+        yield_per_acre: 5,
+        image: "https://media.istockphoto.com/id/518709136/photo/green-cardamom-pods-in-steel-bowl.jpg?s=612x612&w=0&k=20&c=uMfiFWLROWcsyeqG6zcUQb83nxo6VI5_o7aCQUiEmpw="
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 12,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Gangtok"],
+    climate: "Mountain",
+    coordinates: [27.5330, 88.5122]
+  },
+  {
+    name: "Tamil Nadu",
+    state_image:"https://img.freepik.com/premium-vector/tamil-nadu-3d-district-map-is-state-india_667085-269.jpg",
+    soil_types: ["Red", "Black", "Alluvial", "Laterite"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 23,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Sugarcane",
+        scientific_name: "Saccharum officinarum",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [25, 32],
+        rainfall_requirements: [150, 200],
+        ph_range: [6.5, 7.5],
+        yield_per_acre: 320,
+        image: "https://cdn.pixabay.com/photo/2020/07/09/20/00/sugarcane-5388614_1280.jpg"
+      }
+    ],
+    
+    best_markets: ["Chennai"],
+    climate: "Tropical",
+    coordinates: [11.1271, 78.6569]
+  },
+  {
+    name: "Telangana",
+    state_image:"https://static.vecteezy.com/system/resources/previews/028/125/532/non_2x/telangana-3d-district-map-is-a-state-of-india-vector.jpg",
+    soil_types: ["Red", "Black", "Alluvial"],
+    major_crops: [
+      {
+        name: "Cotton",
+        scientific_name: "Gossypium hirsutum",
+        seasons: ["Kharif"],
+        temperature_range: [21, 30],
+        rainfall_requirements: [50, 120],
+        ph_range: [6.0, 7.0],
+        yield_per_acre: 8,
+        image: "https://thumbs.dreamstime.com/b/process-making-cotton-raw-cotton-basket-66651270.jpg"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 24,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Hyderabad"],
+    climate: "Semi-Arid",
+    coordinates: [18.1124, 79.0193]
+  },
+  {
+    name: "Tripura",
+    state_image:"https://as1.ftcdn.net/jpg/05/64/90/74/1000_F_564907493_0SfGMyz3lnVNxCL5dKClrsoh5AoKPIOC.jpg",
+    soil_types: ["Alluvial", "Red", "Forest"],
+    major_crops: [
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 15,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      },
+      {
+        name: "Pineapple",
+        scientific_name: "Ananas comosus",
+        seasons: ["Perennial"],
+        temperature_range: [22, 32],
+        rainfall_requirements: [100, 150],
+        ph_range: [4.5, 6.5],
+        yield_per_acre: 25,
+        image: "https://images.immediate.co.uk/production/volatile/sites/30/2024/06/Pineapple-01-5562ee3.jpg"
+      }
+    ],
+    best_markets: ["Agartala"],
+    climate: "Humid Subtropical",
+    coordinates: [23.9408, 91.9882]
+  },
+  {
+    name: "Uttar Pradesh",
+    state_image:"https://i.pinimg.com/736x/4b/ed/62/4bed62e3c186420433423b1dc2e716ce.jpg",
+    soil_types: ["Alluvial", "Loamy", "Alkaline"],
+    major_crops: [
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 22,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      },
+      {
+        name: "Sugarcane",
+        scientific_name: "Saccharum officinarum",
+        seasons: ["Kharif", "Rabi"],
+        temperature_range: [25, 32],
+        rainfall_requirements: [150, 200],
+        ph_range: [6.5, 7.5],
+        yield_per_acre: 350,
+        image: "https://cdn.pixabay.com/photo/2020/07/09/20/00/sugarcane-5388614_1280.jpg"
+      }
+    ],
+    best_markets: ["Kanpur"],
+    climate: "Subtropical",
+    coordinates: [26.8467, 80.9462]
+  },
+  {
+    name: "Uttarakhand",
+    state_image:"https://as2.ftcdn.net/jpg/05/64/90/77/1000_F_564907795_eClCsDVXr5fepn4lKaRBQc4kqWjc2JAO.jpg",
+    soil_types: ["Mountain", "Forest", "Alluvial"],
+    major_crops: [
+      {
+        name: "Wheat",
+        scientific_name: "Triticum aestivum",
+        seasons: ["Rabi"],
+        temperature_range: [14, 21],
+        rainfall_requirements: [50, 100],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 12,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFicsW1fD9qPBlWRhlBFd0ASiamvOswSgP6w&s"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 10,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Dehradun"],
+    climate: "Mountain",
+    coordinates: [30.0668, 79.0193]
+  },
+  {
+    name: "West Bengal",
+    state_image:"https://i.pinimg.com/736x/dc/4b/3c/dc4b3c5c117fb2b23c7ee1ab32aab13e.jpg",
+    soil_types: ["Alluvial", "Laterite", "Peaty"],
+    major_crops: [
+      {
+        name: "Jute",
+        scientific_name: "Corchorus olitorius",
+        seasons: ["Kharif"],
+        temperature_range: [24, 37],
+        rainfall_requirements: [150, 250],
+        ph_range: [6.0, 7.5],
+        yield_per_acre: 20,
+        image: "https://static.fibre2fashion.com/Newsresource/images/286/shutterstock-1511119781_298399.jpg"
+      },
+      {
+        name: "Potato",
+        scientific_name: "Solanum tuberosum",
+        seasons: ["Rabi"],
+        temperature_range: [15, 20],
+        rainfall_requirements: [50, 75],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 120,
+        image: "https://t3.ftcdn.net/jpg/04/52/75/46/360_F_452754668_F8QX82iY9YCEeywoXa7KSLufO03eY4G3.jpg"
+      },
+      {
+        name: "Rice",
+        scientific_name: "Oryza sativa",
+        seasons: ["Kharif"],
+        temperature_range: [22, 35],
+        rainfall_requirements: [150, 300],
+        ph_range: [5.0, 6.5],
+        yield_per_acre: 26,
+        image: "https://static.vecteezy.com/system/resources/thumbnails/037/349/469/small_2x/ai-generated-a-handful-of-long-grain-white-rice-spills-out-on-the-wooden-table-food-light-natural-colors-high-quality-ai-generative-photo.jpg"
+      }
+    ],
+    best_markets: ["Kolkata"],
+    climate: "Humid Subtropical",
+    coordinates: [22.9868, 87.8550]
+  }
+];
+
+        // Market price data
+        const marketPrices = [
+  { crop: "Rice", price: 2389, change: 2.1, market: "West Bengal" },
+  { crop: "Wheat", price: 2425, change: 1.8, market: "Uttar Pradesh" },
+  { crop: "Maize", price: 2240, change: 2.4, market: "Karnataka" },
+  { crop: "Cotton", price: 7260, change: 3.2, market: "Gujarat" },
+  { crop: "Sugarcane", price: 3400, change: 0.0, market: "Maharashtra" },
+  { crop: "Soybean", price: 4700, change: 4.5, market: "Madhya Pradesh" },
+  { crop: "Groundnut", price: 6377, change: 2.7, market: "Gujarat" },
+  { crop: "Jute", price: 5100, change: 1.5, market: "West Bengal" },
+  { crop: "Tea", price: 200, change: 1.1, market: "Assam" },
+  { crop: "Coffee", price: 44000, change: 2.9, market: "Karnataka" },
+  { crop: "Ragi", price: 4189, change: 2.9, market: "Karnataka" },
+  { crop: "Bajra", price: 2500, change: 1.2, market: "Rajasthan" },
+  { crop: "Barley", price: 1980, change: 0.9, market: "Rajasthan" },
+  { crop: "Pulses", price: 7200, change: 3.3, market: "Madhya Pradesh" },
+  { crop: "Potato", price: 1800, change: -1.0, market: "Uttar Pradesh" },
+  { crop: "Onion", price: 2200, change: 2.0, market: "Maharashtra" },
+  { crop: "Apple", price: 7000, change: 3.8, market: "Himachal Pradesh" },
+  { crop: "Cardamom", price: 170000, change: 5.1, market: "Kerala" },
+  { crop: "Rubber", price: 15300, change: 1.5, market: "Kerala" },
+  { crop: "Coconut", price: 10500, change: 0.0, market: "Kerala" },
+  { crop: "Pineapple", price: 1800, change: 2.2, market: "Tripura" },
+  { crop: "Arecanut", price: 39000, change: 2.0, market: "Karnataka" },
+  { crop: "Cashew", price: 12000, change: 1.7, market: "Goa" },
+  { crop: "Mustard", price: 5650, change: 1.3, market: "Rajasthan" },
+  { crop: "Saffron", price: 170000, change: 0.5, market: "Jammu & Kashmir" },
+  { crop: "Millets", price: 3200, change: 2.5, market: "Odisha" },
+  { crop: "Chilli", price: 21000, change: 3.0, market: "Andhra Pradesh" },
+  { crop: "Banana", price: 1100, change: 1.0, market: "Tamil Nadu" }
+];
+
+        // Weather data (mock)
+        const stateWeatherData = [
+  {
+    state: "Andhra Pradesh",
+    location: "Vijayawada",
+    temp: 30,
+    condition: "Monsoon Showers",
+    humidity: 85,
+    wind: 18,
+    rainfall: 70, // mm (weekly)
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 29 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 28 },
+      { day: "Wed", icon: "cloud-sun", temp: 30 },
+      { day: "Thu", icon: "cloud-sun", temp: 31 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 29 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon Active", message: "Heavy showers likely in coastal districts." }
+    ]
+  },
+  {
+    state: "Arunachal Pradesh",
+    location: "Itanagar",
+    temp: 26,
+    condition: "Heavy Rain",
+    humidity: 92,
+    wind: 10,
+    rainfall: 120,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 25 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 24 },
+      { day: "Wed", icon: "cloud", temp: 26 },
+      { day: "Thu", icon: "cloud", temp: 27 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 25 }
+    ],
+    alerts: [
+      { type: "warning", title: "Flood Watch", message: "River levels rising, local flooding possible." }
+    ]
+  },
+  {
+    state: "Assam",
+    location: "Guwahati",
+    temp: 29,
+    condition: "Thunderstorms",
+    humidity: 91,
+    wind: 17,
+    rainfall: 110,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 28 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Wed", icon: "cloud", temp: 29 },
+      { day: "Thu", icon: "cloud-sun", temp: 30 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 28 }
+    ],
+    alerts: [
+      { type: "warning", title: "Flood Alert", message: "Brahmaputra river at alert level." }
+    ]
+  },
+  {
+    state: "Bihar",
+    location: "Patna",
+    temp: 32,
+    condition: "Humid, Showers",
+    humidity: 87,
+    wind: 14,
+    rainfall: 65,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 31 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Wed", icon: "cloud", temp: 32 },
+      { day: "Thu", icon: "cloud-sun", temp: 33 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 31 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Intermittent heavy rain, waterlogging likely." }
+    ]
+  },
+  {
+    state: "Chhattisgarh",
+    location: "Raipur",
+    temp: 31,
+    condition: "Rainy",
+    humidity: 83,
+    wind: 13,
+    rainfall: 80,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 29 },
+      { day: "Wed", icon: "cloud", temp: 31 },
+      { day: "Thu", icon: "cloud-sun", temp: 32 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 30 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good rainfall for paddy sowing." }
+    ]
+  },
+  {
+    state: "Goa",
+    location: "Panaji",
+    temp: 28,
+    condition: "Heavy Rain",
+    humidity: 95,
+    wind: 20,
+    rainfall: 140,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Wed", icon: "cloud", temp: 28 },
+      { day: "Thu", icon: "cloud-sun", temp: 29 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 27 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon Peak", message: "Heavy rain, landslip risk in hilly areas." }
+    ]
+  },
+  {
+    state: "Gujarat",
+    location: "Ahmedabad",
+    temp: 33,
+    condition: "Showers, Humid",
+    humidity: 78,
+    wind: 15,
+    rainfall: 90,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 32 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 31 },
+      { day: "Wed", icon: "cloud", temp: 33 },
+      { day: "Thu", icon: "cloud-sun", temp: 34 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 32 }
+    ],
+    alerts: [
+      { type: "warning", title: "Heavy Rain", message: "Heavy rainfall in Saurashtra & Kutch." }
+    ]
+  },
+  {
+    state: "Haryana",
+    location: "Karnal",
+    temp: 32,
+    condition: "Monsoon Rain",
+    humidity: 80,
+    wind: 12,
+    rainfall: 75,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 31 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Wed", icon: "cloud", temp: 32 },
+      { day: "Thu", icon: "cloud-sun", temp: 33 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 31 }
+    ],
+    alerts: [
+      { type: "info", title: "Good Rain", message: "Favorable for kharif crops." }
+    ]
+  },
+  {
+    state: "Himachal Pradesh",
+    location: "Shimla",
+    temp: 22,
+    condition: "Rain, Mist",
+    humidity: 92,
+    wind: 8,
+    rainfall: 110,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 21 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 20 },
+      { day: "Wed", icon: "cloud", temp: 22 },
+      { day: "Thu", icon: "cloud-sun", temp: 23 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 21 }
+    ],
+    alerts: [
+      { type: "warning", title: "Landslide Risk", message: "Heavy rain, landslides possible in hilly areas." }
+    ]
+  },
+  {
+    state: "Jharkhand",
+    location: "Ranchi",
+    temp: 28,
+    condition: "Showers",
+    humidity: 88,
+    wind: 12,
+    rainfall: 85,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 26 },
+      { day: "Wed", icon: "cloud", temp: 28 },
+      { day: "Thu", icon: "cloud-sun", temp: 29 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 27 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Steady rain, keep fields drained." }
+    ]
+  },
+  {
+    state: "Karnataka",
+    location: "Bengaluru",
+    temp: 27,
+    condition: "Rain, Cloudy",
+    humidity: 89,
+    wind: 14,
+    rainfall: 95,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 26 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 26 },
+      { day: "Wed", icon: "cloud", temp: 27 },
+      { day: "Thu", icon: "cloud-sun", temp: 28 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 26 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good rain for sowing groundnut, ragi." }
+    ]
+  },
+  {
+    state: "Kerala",
+    location: "Kochi",
+    temp: 28,
+    condition: "Heavy Rain",
+    humidity: 96,
+    wind: 22,
+    rainfall: 180,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Wed", icon: "cloud", temp: 28 },
+      { day: "Thu", icon: "cloud-sun", temp: 29 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 27 }
+    ],
+    alerts: [
+      { type: "warning", title: "Flood Watch", message: "Heavy rain, local flooding in lowlands." }
+    ]
+  },
+  {
+    state: "Madhya Pradesh",
+    location: "Indore",
+    temp: 29,
+    condition: "Rainy, Cloudy",
+    humidity: 81,
+    wind: 13,
+    rainfall: 90,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 28 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 27 },
+      { day: "Wed", icon: "cloud", temp: 29 },
+      { day: "Thu", icon: "cloud-sun", temp: 30 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 28 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good for soybean and pulses." }
+    ]
+  },
+  {
+    state: "Maharashtra",
+    location: "Pune",
+    temp: 27,
+    condition: "Rain, Cloudy",
+    humidity: 90,
+    wind: 18,
+    rainfall: 120,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 26 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 26 },
+      { day: "Wed", icon: "cloud", temp: 27 },
+      { day: "Thu", icon: "cloud-sun", temp: 28 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 27 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Sugarcane fields well irrigated." }
+    ]
+  },
+  {
+    state: "Manipur",
+    location: "Imphal",
+    temp: 25,
+    condition: "Heavy Rain",
+    humidity: 93,
+    wind: 10,
+    rainfall: 130,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 24 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 24 },
+      { day: "Wed", icon: "cloud", temp: 25 },
+      { day: "Thu", icon: "cloud-sun", temp: 26 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 24 }
+    ],
+    alerts: [
+      { type: "warning", title: "Flood Alert", message: "River flooding in low-lying areas." }
+    ]
+  },
+  {
+    state: "Meghalaya",
+    location: "Shillong",
+    temp: 21,
+    condition: "Rain, Mist",
+    humidity: 98,
+    wind: 12,
+    rainfall: 170,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 20 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 20 },
+      { day: "Wed", icon: "cloud", temp: 21 },
+      { day: "Thu", icon: "cloud-sun", temp: 22 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 20 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Heavy rain, landslip risk in hills." }
+    ]
+  },
+  {
+    state: "Mizoram",
+    location: "Aizawl",
+    temp: 23,
+    condition: "Rainy",
+    humidity: 90,
+    wind: 10,
+    rainfall: 110,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 22 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 22 },
+      { day: "Wed", icon: "cloud", temp: 23 },
+      { day: "Thu", icon: "cloud-sun", temp: 24 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 22 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good for paddy transplanting." }
+    ]
+  },
+  {
+    state: "Nagaland",
+    location: "Kohima",
+    temp: 22,
+    condition: "Rain, Cloudy",
+    humidity: 88,
+    wind: 9,
+    rainfall: 100,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 21 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 21 },
+      { day: "Wed", icon: "cloud", temp: 22 },
+      { day: "Thu", icon: "cloud-sun", temp: 23 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 21 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Heavy rain, landslip risk." }
+    ]
+  },
+  {
+    state: "Odisha",
+    location: "Bhubaneswar",
+    temp: 31,
+    condition: "Monsoon Showers",
+    humidity: 86,
+    wind: 15,
+    rainfall: 100,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 29 },
+      { day: "Wed", icon: "cloud", temp: 31 },
+      { day: "Thu", icon: "cloud-sun", temp: 32 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 30 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good for rice sowing." }
+    ]
+  },
+  {
+    state: "Punjab",
+    location: "Ludhiana",
+    temp: 33,
+    condition: "Showers, Humid",
+    humidity: 82,
+    wind: 13,
+    rainfall: 62,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 32 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 31 },
+      { day: "Wed", icon: "cloud", temp: 33 },
+      { day: "Thu", icon: "cloud-sun", temp: 34 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 32 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Favorable for paddy transplanting." }
+    ]
+  },
+  {
+    state: "Rajasthan",
+    location: "Jaipur",
+    temp: 34,
+    condition: "Rain, Hot",
+    humidity: 68,
+    wind: 18,
+    rainfall: 55,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 33 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 32 },
+      { day: "Wed", icon: "cloud", temp: 34 },
+      { day: "Thu", icon: "cloud-sun", temp: 35 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 33 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Scattered rain, hot afternoons." }
+    ]
+  },
+  {
+    state: "Sikkim",
+    location: "Gangtok",
+    temp: 20,
+    condition: "Heavy Rain, Mist",
+    humidity: 97,
+    wind: 8,
+    rainfall: 160,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 19 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 19 },
+      { day: "Wed", icon: "cloud", temp: 20 },
+      { day: "Thu", icon: "cloud-sun", temp: 21 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 19 }
+    ],
+    alerts: [
+      { type: "warning", title: "Landslide Alert", message: "Very heavy rain, landslides possible." }
+    ]
+  },
+  {
+    state: "Tamil Nadu",
+    location: "Chennai",
+    temp: 34,
+    condition: "Cloudy, Showers",
+    humidity: 76,
+    wind: 16,
+    rainfall: 60,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 33 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 33 },
+      { day: "Wed", icon: "cloud", temp: 34 },
+      { day: "Thu", icon: "cloud-sun", temp: 35 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 33 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Showers, humid weather." }
+    ]
+  },
+  {
+    state: "Telangana",
+    location: "Hyderabad",
+    temp: 31,
+    condition: "Rain, Cloudy",
+    humidity: 81,
+    wind: 14,
+    rainfall: 80,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 29 },
+      { day: "Wed", icon: "cloud", temp: 31 },
+      { day: "Thu", icon: "cloud-sun", temp: 32 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 30 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good for cotton sowing." }
+    ]
+  },
+  {
+    state: "Tripura",
+    location: "Agartala",
+    temp: 29,
+    condition: "Heavy Rain",
+    humidity: 93,
+    wind: 12,
+    rainfall: 120,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 28 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 28 },
+      { day: "Wed", icon: "cloud", temp: 29 },
+      { day: "Thu", icon: "cloud-sun", temp: 30 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 28 }
+    ],
+    alerts: [
+      { type: "warning", title: "Flood Alert", message: "Flooding possible in low-lying areas." }
+    ]
+  },
+  {
+    state: "Uttar Pradesh",
+    location: "Kanpur",
+    temp: 33,
+    condition: "Showers, Humid",
+    humidity: 83,
+    wind: 14,
+    rainfall: 70,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 32 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 32 },
+      { day: "Wed", icon: "cloud", temp: 33 },
+      { day: "Thu", icon: "cloud-sun", temp: 34 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 32 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Good for paddy transplanting." }
+    ]
+  },
+  {
+    state: "Uttarakhand",
+    location: "Dehradun",
+    temp: 25,
+    condition: "Rain, Mist",
+    humidity: 92,
+    wind: 10,
+    rainfall: 110,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 24 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 24 },
+      { day: "Wed", icon: "cloud", temp: 25 },
+      { day: "Thu", icon: "cloud-sun", temp: 26 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 24 }
+    ],
+    alerts: [
+      { type: "warning", title: "Landslide Risk", message: "Heavy rain, landslides possible in hills." }
+    ]
+  },
+  {
+    state: "West Bengal",
+    location: "Kolkata",
+    temp: 31,
+    condition: "Monsoon Showers",
+    humidity: 89,
+    wind: 16,
+    rainfall: 120,
+    forecast: [
+      { day: "Mon", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Tue", icon: "cloud-showers-heavy", temp: 30 },
+      { day: "Wed", icon: "cloud", temp: 31 },
+      { day: "Thu", icon: "cloud-sun", temp: 32 },
+      { day: "Fri", icon: "cloud-showers-heavy", temp: 30 }
+    ],
+    alerts: [
+      { type: "info", title: "Monsoon", message: "Heavy rain, waterlogging in city areas." }
+    ]
+  }
+];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStates();
+            loadStateOptions();
+            loadWeatherData();
+            loadMarketPrices();
+            initMap();
+            setupForm();
+        });
+
+        // Load states data into the page
+        function loadStates() {
+            const container = document.getElementById('statesContainer');
+            container.innerHTML = '';
+
+            statesData.forEach(state => {
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-3';
+                card.innerHTML = `
+                    <div style="background-image:url('${state.state_image}');" class="state-card-base">
+                        <div  class="card-body1">
+                            <h3 style="text-align: center;" class="card-title">${state.name}</h3>
+                            <p class="text-muted">${state.climate} Climate</p>
+                            <hr>
+                            <h6>Major Crops:</h6>
+                            <ul class="list-unstyled">
+                                ${state.major_crops.map(crop => `<li>• ${crop.name}</li>`).join('')}
+                            </ul>
+                            <h6 class="mt-3">Best Markets:</h6>
+                            <p>${state.best_markets.join(', ')}</p>
+                            <button class="btn btn-sm btn-outline-success view-state" data-state="${state.name}">View Details</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-state').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const stateName = this.getAttribute('data-state');
+                    viewStateDetails(stateName);
+                });
+            });
+        }
+
+        // Load states into the dropdown
+        function loadStateOptions() {
+            const select = document.getElementById('stateSelect');
+            statesData.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.name;
+                option.textContent = state.name;
+                select.appendChild(option);
+            });
+        }
+
+        // View state details
+        function viewStateDetails(stateName) {
+            const state = statesData.find(s => s.name === stateName);
+            if (!state) return;
+
+            const resultsDiv = document.getElementById('recommendationResults');
+            resultsDiv.style.display = 'block';
+            document.getElementById('resultPlaceholder').style.display = 'none';
+
+            resultsDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h4>${state.name} - Agricultural Profile</h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Climate & Soil</h5>
+                                <p><strong>Climate:</strong> ${state.climate}</p>
+                                <p><strong>Soil Types:</strong> ${state.soil_types.join(', ')}</p>
+                                <p><strong>Best Markets:</strong> ${state.best_markets.join(', ')}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5>Major Crops</h5>
+                                <ul class="list-group">
+                                    ${state.major_crops.map(crop => `
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            ${crop.name}
+                                            <span class="badge bg-success rounded-pill">${crop.seasons.join('/')}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('resultPlaceholder').style.display='block'; document.getElementById('recommendationResults').style.display='none'">Back</button>
+                </div>
+            `;
+
+            // Scroll to recommendations
+            document.getElementById('recommendation').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Setup form submission
+        function setupForm() {
+            document.getElementById('cropForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const state = document.getElementById('stateSelect').value;
+                const soil = document.getElementById('soilType').value;
+                const season = document.getElementById('season').value;
+                const area = document.getElementById('landArea').value;
+                
+                if (!state || !soil || !season) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                getRecommendations(state, soil, season, area);
+            });
+        }
+
+        // Get crop recommendations
+        function getRecommendations(stateName, soilType, season, area) {
+            const state = statesData.find(s => s.name === stateName);
+            if (!state) return;
+
+            // Filter crops by season (simplified)
+            const seasonType = season.includes('Kharif') ? 'Kharif' : 
+                             season.includes('Rabi') ? 'Rabi' : 'Zaid';
+            const suitableCrops = state.major_crops.filter(crop => 
+    crop.seasons.includes(seasonType));
+
+            document.getElementById('resultPlaceholder').style.display = 'none';
+            const resultsDiv = document.getElementById('recommendationResults');
+            resultsDiv.style.display = 'block';
+
+            if (suitableCrops.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <h4>No crops found matching your criteria</h4>
+                        <p>Try adjusting your soil type or season selection</p>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h4>Top Recommendations for ${stateName}</h4>
+                    <p>Based on ${soilType} soil in ${season} season</p>
+                </div>
+                <div class="row g-3">
+                    ${suitableCrops.map((crop, index) => `
+                        <div class="col-md-${suitableCrops.length > 1 ? '6' : '12'}">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="${crop.image}" class="img-fluid rounded-start h-100" alt="${crop.name}">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${crop.name} ${index === 0 ? '<span class="badge bg-warning">Best Match</span>' : ''}</h5>
+                                            <p class="card-text">${crop.scientific_name}</p>
+                                            <p><strong>Season:</strong> ${crop.seasons.join(', ')}</p>
+                                            ${area ? `<p><strong>Expected Yield:</strong> ${(crop.yield_per_acre * area).toFixed(1)} kg</p>` : ''}
+                                            <small class="text-muted">Ideal Temp: ${crop.temperature_range[0]}°C - ${crop.temperature_range[1]}°C | pH: ${crop.ph_range[0]}-${crop.ph_range[1]}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-outline-success">View Detailed Cultivation Guide</button>
+                </div>
+            `;
+        }
+
+        // Load weather data
+       
+// ...existing code...
+// Load weather data
+function loadWeatherData() {
+    // Use Andhra Pradesh as default
+    const weather = stateWeatherData.find(w => w.state === "Andhra Pradesh");
+    if (!weather) return;
+
+    document.getElementById('weatherLocation').textContent = weather.location;
+    document.getElementById('weatherTemp').textContent = `${weather.temp}°C`;
+    document.getElementById('weatherCondition').textContent = weather.condition;
+    document.getElementById('weatherDetails').textContent = `Humidity: ${weather.humidity}% | Wind: ${weather.wind} km/h`;
+
+    const forecastDiv = document.getElementById('weatherForecast');
+    forecastDiv.innerHTML = weather.forecast.map(day => `
+        <div class="col">
+            <p class="mb-1">${day.day}</p>
+            <i class="fas fa-${day.icon} mb-1"></i>
+            <p class="mb-0">${day.temp}°C</p>
+        </div>
+    `).join('');
+
+    const alertsDiv = document.getElementById('agriAlerts');
+    alertsDiv.innerHTML = weather.alerts.map(alert => `
+        <div class="alert alert-${alert.type}">
+            <h5><i class="fas fa-${alert.type === 'warning' ? 'exclamation-triangle' : alert.type === 'info' ? 'cloud-rain' : 'seedling'} me-2"></i>${alert.title}</h5>
+            <p class="mb-0">${alert.message}</p>
+        </div>
+    `).join('');
+}
+// ...existing code...
+        // Load market prices
+        function loadMarketPrices() {
+            const tableBody = document.querySelector('#priceTable tbody');
+            tableBody.innerHTML = marketPrices.map(item => `
+                <tr>
+                    <td>${item.crop}</td>
+                    <td>${item.price.toLocaleString()}</td>
+                    <td class="${item.change > 0 ? 'text-success' : item.change < 0 ? 'text-danger' : 'text-warning'}">
+                        ${item.change > 0 ? '↑' : item.change < 0 ? '↓' : '↔'} ${Math.abs(item.change)}%
+                    </td>
+                    <td>${item.market}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('transportAdvisory').textContent = 
+                `Current best rates in ${marketPrices[0].market} for ${marketPrices[0].crop.toLowerCase()}. Expected ${marketPrices[0].change}% price change next week.`;
+        }
+
+        // Initialize map
+        function initMap() {
+            const map = L.map('marketMap').setView([20.5937, 78.9629], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add markers for each state
+            statesData.forEach(state => {
+                if (state.coordinates) {
+                    L.marker(state.coordinates)
+                        .addTo(map)
+                        .bindPopup(`<b>${state.name}</b><br>Major crops: ${state.major_crops.map(c => c.name).join(', ')}`);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AgriWeatherMap India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(120deg, #e0f7fa 0%, #fffde4 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+      padding: 32px 24px 24px 24px;
+    }
+    h2 {
+      text-align: center;
+      color: #388e3c;
+      margin-bottom: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    label {
+      font-weight: 500;
+      color: #1565c0;
+      margin-right: 10px;
+    }
+    select, button {
+      font-size: 1rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #bdbdbd;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #388e3c;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+    #map { height: 350px; width: 100%; border-radius: 12px; margin-top: 18px; }
+    .weather-card {
+      background: linear-gradient(135deg, #b2dfdb 0%, #e1bee7 100%);
+      border-radius: 14px;
+      padding: 18px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .weather-main {
+      flex: 1;
+    }
+    .weather-icon {
+      width: 80px;
+      height: 80px;
+    }
+    .weather-details {
+      font-size: 1.1rem;
+      color: #333;
+      margin-top: 8px;
+    }
+    .alert-warning {
+      background: #fff3cd;
+      color: #856404;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06);
+    }
+    .alert-info {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06);
+    }
+    .advisory-card {
+      background: #f1f8e9;
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 18px;
+      color: #388e3c;
+      font-weight: 500;
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06);
+    }
+    .forecast-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .forecast-card {
+      background: #fffde7;
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: center;
+      min-width: 90px;
+      box-shadow: 0 1px 4px rgba(44, 62, 80, 0.06);
+      font-size: 0.95rem;
+      color: #333;
+    }
+    .forecast-card strong {
+      color: #1565c0;
+      font-size: 1.05rem;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 12px 4px; }
+      .weather-card { flex-direction: column; gap: 10px; }
+      .forecast-row { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌾 AgriWeatherMap India 🌾</h2>
+    <div>
+      <label for="location">Select a State / City:</label>
+      <select id="location"></select>
+      <button onclick="showWeather()">Show Weather</button>
+    </div>
+    <div id="weather"></div>
+    <div id="alerts"></div>
+    <div id="advisory"></div>
+    <div id="forecast"></div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // List of cities/states with coordinates and crop info
+    const statesData = [
+      { name: "Delhi", city: "Delhi", coords: [28.6139, 77.2090], crop: "Wheat, Mustard, Vegetables", advisory: "Irrigate wheat fields in morning. Monitor for aphids in mustard.", alerts: ["No major weather events."], },
+      { name: "Maharashtra", city: "Mumbai", coords: [19.0760, 72.8777], crop: "Rice, Sugarcane, Vegetables", advisory: "Delay pesticide application due to expected rain. Ensure proper drainage in fields.", alerts: ["Heavy rainfall expected in next 24 hours."], },
+      { name: "West Bengal", city: "Kolkata", coords: [22.5726, 88.3639], crop: "Rice, Jute, Potato", advisory: "Monitor rice for blast disease. Apply organic manure to jute.", alerts: ["Flood alert in southern districts."], },
+      { name: "Tamil Nadu", city: "Chennai", coords: [13.0827, 80.2707], crop: "Rice, Sugarcane, Cotton", advisory: "Monitor rice for blast disease. Apply organic manure to sugarcane.", alerts: ["Mild rain expected in delta region."], },
+      { name: "Karnataka", city: "Bangalore", coords: [12.9716, 77.5946], crop: "Rice, Coffee, Sugarcane", advisory: "Delay fertilizer application in coffee. Ensure drainage in rice fields.", alerts: ["Heavy rain in coastal districts."], },
+      { name: "Gujarat", city: "Ahmedabad", coords: [23.0225, 72.5714], crop: "Cotton, Groundnut, Bajra", advisory: "Stake cotton plants to prevent wind damage. Irrigate groundnut fields.", alerts: ["Strong winds in coastal Saurashtra."], },
+      { name: "Punjab", city: "Amritsar", coords: [31.6340, 74.8723], crop: "Wheat, Rice, Maize", advisory: "Apply fertilizer to wheat. Monitor rice for blast disease.", alerts: ["No major weather events."], },
+      { name: "Kerala", city: "Thiruvananthapuram", coords: [8.5241, 76.9366], crop: "Rice, Coconut, Banana", advisory: "Harvest bananas before heavy rain. Check coconut trees for pest infestation.", alerts: ["Flood alert in low-lying areas."], },
+      { name: "Rajasthan", city: "Jaipur", coords: [26.9124, 75.7873], crop: "Bajra, Wheat, Barley", advisory: "Irrigate bajra fields in morning. Mulch soil to retain moisture.", alerts: ["Heatwave conditions in western Rajasthan."], },
+      { name: "Uttar Pradesh", city: "Lucknow", coords: [26.8467, 80.9462], crop: "Wheat, Rice, Sugarcane", advisory: "Irrigate wheat fields in morning. Mulch soil to retain moisture.", alerts: ["Heatwave conditions in central UP."], },
+      { name: "Bihar", city: "Patna", coords: [25.5941, 85.1376], crop: "Wheat, Maize, Lentil", advisory: "Irrigate wheat fields in morning. Mulch soil to retain moisture.", alerts: ["Heatwave conditions in north Bihar."], },
+      { name: "Madhya Pradesh", city: "Bhopal", coords: [23.2599, 77.4126], crop: "Soybean, Wheat, Rice", advisory: "Check for leaf spot in soybean. Apply organic manure.", alerts: ["Mild rain expected in central region."], },
+      { name: "Odisha", city: "Bhubaneswar", coords: [20.2961, 85.8245], crop: "Rice, Pulses, Groundnut", advisory: "Monitor rice for blast disease. Apply organic manure to pulses.", alerts: ["Flood alert in coastal districts."], },
+      { name: "Telangana", city: "Hyderabad", coords: [17.3850, 78.4867], crop: "Rice, Cotton, Maize", advisory: "Irrigate paddy fields moderately. Monitor for stem borer in maize.", alerts: ["Light rain possible in northern districts."], },
+      { name: "Chhattisgarh", city: "Raipur", coords: [21.2514, 81.6296], crop: "Rice, Soybean, Pulses", advisory: "Check for leaf spot in soybean. Apply organic manure.", alerts: ["Mild rain expected in central region."], },
+      { name: "Jharkhand", city: "Ranchi", coords: [23.3441, 85.3096], crop: "Rice, Pulses, Maize", advisory: "Monitor rice for blast disease. Apply organic manure to pulses.", alerts: ["Mild rain expected in Ranchi region."], },
+      { name: "Assam", city: "Guwahati", coords: [26.1445, 91.7362], crop: "Tea, Rice, Jute", advisory: "Harvest tea leaves early. Monitor water levels in rice fields.", alerts: ["Flood alert in Brahmaputra basin."], },
+      { name: "Haryana", city: "Chandigarh", coords: [30.7333, 76.7794], crop: "Wheat, Barley, Mustard", advisory: "Apply fertilizer to wheat. Monitor mustard for aphids.", alerts: ["No major weather events."], },
+      { name: "Goa", city: "Panaji", coords: [15.4909, 73.8278], crop: "Cashew, Rice, Coconut", advisory: "Harvest cashew nuts before heavy rain. Ensure drainage in rice fields.", alerts: ["Flooding possible in low-lying areas."], },
+      { name: "Tripura", city: "Agartala", coords: [23.8315, 91.2868], crop: "Rice, Pulses, Maize", advisory: "Monitor rice for blast disease. Apply organic manure to pulses.", alerts: ["Moderate rain in western districts."], },
+      { name: "Manipur", city: "Imphal", coords: [24.8170, 93.9368], crop: "Rice, Pulses, Maize", advisory: "Monitor rice for blast disease. Apply organic manure to pulses.", alerts: ["Moderate rain in valley areas."], },
+      { name: "Meghalaya", city: "Shillong", coords: [25.5788, 91.8933], crop: "Potato, Maize, Ginger", advisory: "Avoid field work during heavy rain. Check drainage in ginger fields.", alerts: ["Landslide risk in hilly regions."], },
+      { name: "Nagaland", city: "Kohima", coords: [25.6701, 94.1077], crop: "Rice, Maize, Millets", advisory: "Monitor rice for blast disease. Apply organic manure to maize.", alerts: ["Light rain in hilly areas."], },
+      { name: "Mizoram", city: "Aizawl", coords: [23.7271, 92.7176], crop: "Rice, Maize, Ginger", advisory: "Monitor rice for blast disease. Apply organic manure to maize.", alerts: ["Moderate rain in southern districts."], },
+      { name: "Sikkim", city: "Gangtok", coords: [27.3389, 88.6065], crop: "Maize, Potato, Cardamom", advisory: "Harvest potatoes before heavy rain. Check maize for stem borer.", alerts: ["Landslide risk in hilly areas."], },
+      { name: "Himachal Pradesh", city: "Shimla", coords: [31.1048, 77.1734], crop: "Apple, Potato, Maize", advisory: "Harvest apples before heavy rain. Check potato fields for blight.", alerts: ["Landslide risk in hilly areas."], },
+      { name: "Uttarakhand", city: "Dehradun", coords: [30.3165, 78.0322], crop: "Rice, Maize, Potato", advisory: "Harvest potatoes before heavy rain. Check maize for stem borer.", alerts: ["Landslide risk in hilly areas."], },
+      { name: "Arunachal Pradesh", city: "Itanagar", coords: [27.0844, 93.6053], crop: "Maize, Millets, Ginger", advisory: "Avoid field work during heavy rain. Check drainage in ginger fields.", alerts: ["Landslide risk in hilly regions."], }
+    ];
+
+    // Populate dropdown
+    const locationSelect = document.getElementById('location');
+    statesData.forEach((state, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${state.name} (${state.city})`;
+      locationSelect.appendChild(opt);
+    });
+
+    // Initialize map
+    var map = L.map('map').setView([22.9734, 78.6569], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    var marker;
+
+    // WeatherAPI key
+    const weatherApiKey = "2f4602772a60470a9b894651251107";
+
+    function showWeather() {
+      const idx = locationSelect.value;
+      if (idx === "") return;
+      const state = statesData[idx];
+
+      // Fetch live weather
+      fetch(`https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${state.city}&aqi=no`)
+        .then(res => res.json())
+        .then(data => {
+          // Weather details
+          document.getElementById('weather').innerHTML = `
+            <div class="weather-card">
+              <div class="weather-main">
+                <h3>Weather in ${state.city}, ${state.name}</h3>
+                <div class="weather-details">
+                  <strong>Temperature:</strong> ${data.current.temp_c}°C<br>
+                  <strong>Condition:</strong> ${data.current.condition.text}<br>
+                  <strong>Humidity:</strong> ${data.current.humidity}%<br>
+                  <strong>Wind:</strong> ${data.current.wind_kph} km/h<br>
+                  <strong>Rainfall:</strong> ${data.current.precip_mm} mm
+                </div>
+              </div>
+              <img class="weather-icon" src="${data.current.condition.icon}" alt="icon" />
+            </div>
+          `;
+
+          // Alerts (manual, plus heat/rain warnings)
+          let alertsHtml = state.alerts.map(a =>
+            `<div class="alert-warning"><strong>Alert:</strong> ${a}</div>`
+          ).join('');
+          if (data.current.temp_c > 38) {
+            alertsHtml += `<div class="alert-warning"><strong>Alert:</strong> Heatwave conditions!</div>`;
+          }
+          if (data.current.precip_mm > 20) {
+            alertsHtml += `<div class="alert-warning"><strong>Alert:</strong> Heavy rainfall warning!</div>`;
+          }
+          document.getElementById('alerts').innerHTML = alertsHtml;
+
+          // Advisory
+          document.getElementById('advisory').innerHTML = `
+            <div class="advisory-card"><strong>Crop Advisory:</strong> ${state.crop}<br>${state.advisory}</div>
+          `;
+
+          // Forecast (WeatherAPI free plan does not provide 7-day forecast in current.json, so we use manual sample)
+          document.getElementById('forecast').innerHTML = `
+            <h4>Sample 7-Day Forecast</h4>
+            <div class="forecast-row">
+              ${state.name === "Delhi" ? `
+                <div class="forecast-card"><strong>Mon</strong><br>38°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Tue</strong><br>39°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Wed</strong><br>37°C<br>Cloudy<br><small>Rain: 2mm</small></div>
+                <div class="forecast-card"><strong>Thu</strong><br>36°C<br>Cloudy<br><small>Rain: 3mm</small></div>
+                <div class="forecast-card"><strong>Fri</strong><br>35°C<br>Cloudy<br><small>Rain: 4mm</small></div>
+                <div class="forecast-card"><strong>Sat</strong><br>37°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Sun</strong><br>38°C<br>Sunny<br><small>Rain: 0mm</small></div>
+              ` : state.name === "Kerala" ? `
+                <div class="forecast-card"><strong>Mon</strong><br>28°C<br>Rain<br><small>Rain: 25mm</small></div>
+                <div class="forecast-card"><strong>Tue</strong><br>29°C<br>Cloudy<br><small>Rain: 10mm</small></div>
+                <div class="forecast-card"><strong>Wed</strong><br>30°C<br>Cloudy<br><small>Rain: 8mm</small></div>
+                <div class="forecast-card"><strong>Thu</strong><br>28°C<br>Rain<br><small>Rain: 20mm</small></div>
+                <div class="forecast-card"><strong>Fri</strong><br>27°C<br>Cloudy<br><small>Rain: 6mm</small></div>
+                <div class="forecast-card"><strong>Sat</strong><br>28°C<br>Rain<br><small>Rain: 15mm</small></div>
+                <div class="forecast-card"><strong>Sun</strong><br>29°C<br>Cloudy<br><small>Rain: 7mm</small></div>
+              ` : state.name === "Rajasthan" ? `
+                <div class="forecast-card"><strong>Mon</strong><br>41°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Tue</strong><br>42°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Wed</strong><br>40°C<br>Cloudy<br><small>Rain: 1mm</small></div>
+                <div class="forecast-card"><strong>Thu</strong><br>39°C<br>Cloudy<br><small>Rain: 2mm</small></div>
+                <div class="forecast-card"><strong>Fri</strong><br>38°C<br>Cloudy<br><small>Rain: 3mm</small></div>
+                <div class="forecast-card"><strong>Sat</strong><br>41°C<br>Sunny<br><small>Rain: 0mm</small></div>
+                <div class="forecast-card"><strong>Sun</strong><br>42°C<br>Sunny<br><small>Rain: 0mm</small></div>
+              ` : state.name === "Maharashtra" ? `
+                <div class="forecast-card"><strong>Mon</strong><br>32°C<br>Rain<br><small>Rain: 18mm</small></div>
+                <div class="forecast-card"><strong>Tue</strong><br>33°C<br>Cloudy<br><small>Rain: 8mm</small></div>
+                <div class="forecast-card"><strong>Wed</strong><br>34°C<br>Cloudy<br><small>Rain: 4mm</small></div>
+                <div class="forecast-card"><strong>Thu</strong><br>32°C<br>Rain<br><small>Rain: 12mm</small></div>
+                <div class="forecast-card"><strong>Fri</strong><br>31°C<br>Cloudy<br><small>Rain: 6mm</small></div>
+                <div class="forecast-card"><strong>Sat</strong><br>32°C<br>Rain<br><small>Rain: 10mm</small></div>
+                <div class="forecast-card"><strong>Sun</strong><br>33°C<br>Cloudy<br><small>Rain: 5mm</small></div>
+              ` : `
+                <div class="forecast-card"><strong>Mon</strong><br>30°C<br>Cloudy<br><small>Rain: 5mm</small></div>
+                <div class="forecast-card"><strong>Tue</strong><br>31°C<br>Cloudy<br><small>Rain: 4mm</small></div>
+                <div class="forecast-card"><strong>Wed</strong><br>32°C<br>Cloudy<br><small>Rain: 3mm</small></div>
+                <div class="forecast-card"><strong>Thu</strong><br>31°C<br>Cloudy<br><small>Rain: 2mm</small></div>
+                <div class="forecast-card"><strong>Fri</strong><br>30°C<br>Cloudy<br><small>Rain: 1mm</small></div>
+                <div class="forecast-card"><strong>Sat</strong><br>31°C<br>Cloudy<br><small>Rain: 2mm</small></div>
+                <div class="forecast-card"><strong>Sun</strong><br>32°C<br>Cloudy<br><small>Rain: 3mm</small></div>
+              `}
+            </div>
+          `;
+
+          // Map
+          map.setView(state.coords, 8);
+          if (marker) map.removeLayer(marker);
+          marker = L.marker(state.coords).addTo(map)
+            .bindPopup(`<b>${state.city}, ${state.name}</b><br>Temp: ${data.current.temp_c}°C`)
+            .openPopup();
+        })
+        .catch(() => {
+          document.getElementById('weather').innerHTML = `<div class="weather-card"><div class="weather-main"><h3>Weather data unavailable</h3></div></div>`;
+          document.getElementById('alerts').innerHTML = '';
+          document.getElementById('advisory').innerHTML = '';
+          document.getElementById('forecast').innerHTML = '';
+        });
+    }
+  </script>
+</body>
+</html>

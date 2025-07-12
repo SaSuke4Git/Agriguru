@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriGuru | Agri Market - Swiggy Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { background: #f7f7fa; font-family: 'Poppins', sans-serif; }
+        .navbar { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .navbar-brand { color: #198754 !important; font-weight: 600; font-size: 1.5rem; }
+        .nav-link { color: #222 !important; }
+        .search-bar { max-width: 500px; margin: 0 auto; }
+        .category-tabs { margin: 2rem 0 1rem 0; }
+        .category-btn { border-radius: 20px; margin-right: 8px; font-weight: 500; }
+        .product-card { border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); margin-bottom: 32px; background: #fff; transition: box-shadow 0.2s; }
+        .product-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.14); }
+        .product-img { height: 180px; object-fit: cover; border-radius: 18px 18px 0 0; }
+        .card-title { font-weight: 600; font-size: 1.2rem; }
+        .card-text { font-size: 1rem; }
+        .seller-info { font-size: 0.95rem; color: #555; }
+        .price-tag { font-size: 1.1rem; font-weight: 600; color: #198754; }
+        .contact-btn { border-radius: 16px; font-weight: 500; }
+        .bg-success { background: #bedecf !important; color: #056539 }
+        .footer { background: #23272b; color: #fff; padding: 2rem 0; margin-top: 3rem; }
+        @media (max-width: 768px) {
+            .product-img { height: 120px; }
+        }
+        .card-body{
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .product-details{
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .product-intro{
+            display: flex;
+            justify-content: space-between; 
+            padding: 5px;
+            
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://cdn-icons-png.flaticon.com/512/3063/3063512.png" alt="Logo" width="40" height="40" class="me-2">
+                AgriGuru Market
+            </a>
+            <form class="d-flex search-bar">
+                <input class="form-control me-2" type="search" placeholder="Search for crops, states, sellers..." aria-label="Search" id="searchInput">
+                <button class="btn btn-success" type="button" onclick="searchProducts()">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-md-6 offset-md-3">
+                <select class="form-select" id="stateSelect" onchange="filterState()">
+                    <option value="">All States</option>
+                </select>
+            </div>
+        </div>
+        <div class="category-tabs text-center">
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('All')">All</button>
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('Grains')">Grains</button>
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('Fruits')">Fruits</button>
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('Vegetables')">Vegetables</button>
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('Spices')">Spices</button>
+            <button class="btn btn-outline-success category-btn" onclick="filterCategory('Others')">Others</button>
+        </div>
+        <div class="row g-4" id="productGrid"></div>
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-0">© 2025 AgriGuru by DataVelopers. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- State-wise price multipliers ---
+        const stateMultipliers = {
+            "Delhi": 1.25, "Maharashtra": 1.20, "Karnataka": 1.18, "Tamil Nadu": 1.17, "Punjab": 1.15,
+            "Gujarat": 1.13, "West Bengal": 1.10, "Kerala": 1.10, "Uttar Pradesh": 1.08, "Haryana": 1.08,
+            "Rajasthan": 1.07, "Bihar": 1.05, "Chhattisgarh": 1.03, "Jharkhand": 1.03, "Odisha": 1.02,
+            "Assam": 1.01, "Goa": 1.20, "Tripura": 1.00, "Manipur": 1.00, "Meghalaya": 1.00, "Nagaland": 1.00,
+            "Mizoram": 1.00, "Sikkim": 1.00, "Himachal Pradesh": 1.00, "Uttarakhand": 1.00, "Arunachal Pradesh": 1.00,
+            "Telangana": 1.15
+        };
+
+        // --- Sample products for each state ---
+        const baseProducts = [
+            { name: "Rice", category: "Grains", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSao8klaiFQBzvwY3JNcsockUKwN28mN_aycQ&s" },
+            { name: "Wheat", category: "Grains", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfJzazTIRVKHJrB4VOsplFjQ2TERZFXk6Qlg&s" },
+            { name: "Maize", category: "Grains", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeAK_Kb2ZpDx3P-7i1N8E6kQQw1TCPr8xlg&s" },
+            { name: "Potato", category: "Vegetables", image: "https://www.jiomart.com/images/product/original/590001788/nutrafresh-potato-low-sugar-2-kg-product-images-o590001788-p590001788-0-202408132027.jpg?im=Resize=(420,420)" },
+            { name: "Sugarcane", category: "Grains", image: "https://static.toiimg.com/photo/80755360.cms" },
+            { name: "Banana", category: "Fruits", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAiE9BZy3SyV4Xb83a3V-e8Ywq6z1bVZlGsA&s" },
+            { name: "Onion", category: "Vegetables", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdNrNiidgoqyCUmuoE1pXFbX1ztYpgtJ4azQ&s" },
+            { name: "Chilli", category: "Spices", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5gnW2EIwbZMQ4IynlYuHc5tnq9oA1e58Dsg&s" },
+            { name: "Mango", category: "Fruits", image: "https://static.toiimg.com/thumb/msid-120427786,width-1280,height-720,resizemode-4/120427786.jpg" },
+            { name: "Tomato", category: "Vegetables", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ83Fw9z_3YOPp6U1MXhei5uThSTsKR1BpAcw&s" },
+            { name: "Brinjal", category: "Vegetables", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWuMQeK87hFJHyEUp6AA_oZSanegcCz3gwkQ&s" },
+            { name: "Cabbage", category: "Vegetables", image: "https://www.jiomart.com/images/product/original/590002370/cabbage-1-pc-approx-600-g-1000-g-product-images-o590002370-p590002370-0-202409171904.jpg?im=Resize=(420,420)" },
+            { name: "Apple", category: "Fruits", image: "https://www.bbassets.com/media/uploads/p/l/40093037_14-fresho-apple-red-delicious-organically-grown.jpg" },
+            { name: "Grapes", category: "Fruits", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAJyIiS0Pa1cSag8iyWRD6KTrF9RU_cO-WfA&s" },
+            { name: "Turmeric", category: "Spices", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO4XcHyjcaGPdOSB5ApWcAVnU63_fT_d5juA&s" }
+        ];
+
+        const states = Object.keys(stateMultipliers);
+
+        // --- Generate products for each state ---
+        const products = [];
+        states.forEach((state, sIdx) => {
+            for (let i = 0; i < baseProducts.length; i++) {
+                const prod = baseProducts[i];
+                // Price logic: base + multiplier + random
+                const baseWholesale = 1200 + i * 250 + sIdx * 30;
+                const baseRetail = 15 + i * 2 + sIdx;
+                const multiplier = stateMultipliers[state] || 1;
+                const wholesale = Math.round(baseWholesale * multiplier + Math.random() * 100);
+                const retail = Math.round(baseRetail * multiplier + Math.random() * 5);
+
+                products.push({
+                    name: prod.name,
+                    category: prod.category,
+                    state: state,
+                    market: `${state} Main Market`,
+                    wholesale: wholesale,
+                    retail: retail,
+                    image: prod.image,
+                    seller: `${prod.name} Seller ${sIdx + 1}`,
+                    contact: `9${Math.floor(100000000 + Math.random() * 899999999)}`
+                });
+            }
+        });
+
+        let currentCategory = 'All';
+        let searchTerm = '';
+        let selectedState = '';
+
+        function displayProducts() {
+            const grid = document.getElementById('productGrid');
+            let filtered = products.filter(p => {
+                let matchCat = currentCategory === 'All' || p.category === currentCategory;
+                let matchState = !selectedState || p.state === selectedState;
+                let matchSearch = !searchTerm || (
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    p.state.toLowerCase().includes(searchTerm) ||
+                    p.market.toLowerCase().includes(searchTerm) ||
+                    p.seller.toLowerCase().includes(searchTerm)
+                );
+                return matchCat && matchState && matchSearch;
+            });
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center"><div class="alert alert-warning">No products found.</div></div>';
+                return;
+            }
+            grid.innerHTML = filtered.map(product => `
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <img src="${product.image}" class="product-img card-img-top" alt="${product.name}">
+                        <div class="card-body">
+                            <div class="product-intro">
+                                <h2 class="card-title">${product.name}</h2>
+                                <p class="card-text"><span class="badge bg-success">${product.category}</span></p>
+                            </div>
+                            <div class="product-details">
+                                <h6 class="card-text"><strong>State:</strong> ${product.state}</h6>
+                                <h6 class="card-text"><strong>Market:</strong> ${product.market}</h6>
+                            </div>
+                            <div class="product-sales">
+                                <h6 class="card-text price-tag">Wholesale: ₹${product.wholesale} / quintal</h6>
+                                <h6 class="card-text price-tag">Retail: ₹${product.retail} / kg</h6>
+                            </div>
+                            <div class="seller-info mb-2"><strong>Seller:</strong> ${product.seller} <br> <strong>Contact:</strong> ${product.contact}</div>
+                            <button class="btn btn-outline-success contact-btn w-100" onclick="alert('Contact seller: ${product.contact}')">Contact Seller</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            displayProducts();
+        }
+
+        function searchProducts() {
+            searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            displayProducts();
+        }
+
+        function filterState() {
+            selectedState = document.getElementById('stateSelect').value;
+            displayProducts();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const stateSelect = document.getElementById('stateSelect');
+            states.forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state;
+                opt.textContent = state;
+                stateSelect.appendChild(opt);
+            });
+            displayProducts();
+        });
+    </script>
+</body>
+</html>

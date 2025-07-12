@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart AgriAdvisor</title>
+  <link rel="stylesheet" href="crop.css" />
+</head>
+<body>
+  <div class="theme-toggle">
+    <button id="toggleThemeBtn" aria-label="Toggle dark/light mode">🌙 Dark Mode</button>
+    <select id="languageSelect" aria-label="Select language" style="margin-left:18px; padding:6px 12px; border-radius:8px;">
+      <option value="en">English</option>
+      <option value="ml">മലയാളം</option>
+      <option value="hi">हिन्दी</option>
+    </select>
+  </div>
+  <div class="container enhanced-container">
+    <h1 id="mainTitle">🌾 Smart AgriAdvisor</h1>
+    <div class="main-flex">
+      <div class="form-section">
+        <h2 id="formTitle">🌱 Enter IoT Sensor Data</h2>
+        <form id="sensorForm">
+          <label for="N" id="labelN">Nitrogen (N)</label>
+          <input type="number" id="N" required />
+
+          <label for="P" id="labelP">Phosphorus (P)</label>
+          <input type="number" id="P" required />
+
+          <label for="K" id="labelK">Potassium (K)</label>
+          <input type="number" id="K" required />
+
+          <label for="temperature" id="labelTemp">Temperature (°C)</label>
+          <input type="number" id="temperature" required step="0.1" />
+
+          <label for="humidity" id="labelHumidity">Humidity (%)</label>
+          <input type="number" id="humidity" required step="0.1" />
+
+          <label for="ph" id="labelPh">Soil pH</label>
+          <input type="number" id="ph" required step="0.1" />
+
+          <label for="rainfall" id="labelRainfall">Rainfall (mm)</label>
+          <input type="number" id="rainfall" required step="0.1" />
+
+          <button type="submit" id="submitBtn">🌾 Get Crop Recommendation</button>
+        </form>
+      </div>
+
+      <div class="recommendation">
+        <h2 id="recTitle">✅ Recommended Crops</h2>
+        <div id="crop-list" class="card-list">
+          <p id="waitingText">Waiting for input...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    // Theme toggle logic
+    const btn = document.getElementById('toggleThemeBtn');
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+
+    // Language switch logic
+    const langData = {
+      en: {
+        mainTitle: "🌾 Smart AgriAdvisor",
+        formTitle: "🌱 Enter IoT Sensor Data",
+        labelN: "Nitrogen (N)",
+        labelP: "Phosphorus (P)",
+        labelK: "Potassium (K)",
+        labelTemp: "Temperature (°C)",
+        labelHumidity: "Humidity (%)",
+        labelPh: "Soil pH",
+        labelRainfall: "Rainfall (mm)",
+        submitBtn: "🌾 Get Crop Recommendation",
+        recTitle: "✅ Recommended Crops",
+        waitingText: "Waiting for input..."
+      },
+      ml: {
+        mainTitle: "🌾 സ്മാർട്ട് അഗ്രി അഡ്വൈസർ",
+        formTitle: "🌱 സെൻസർ ഡാറ്റ നൽകുക",
+        labelN: "നൈട്രജൻ (N)",
+        labelP: "ഫോസ്ഫറസ് (P)",
+        labelK: "പൊട്ടാഷ്യം (K)",
+        labelTemp: "താപനില (°C)",
+        labelHumidity: "ആർദ്രത (%)",
+        labelPh: "മണ്ണിന്റെ പിഎച്ച്",
+        labelRainfall: "മഴവെള്ളം (mm)",
+        submitBtn: "🌾 വിള നിർദ്ദേശം നേടുക",
+        recTitle: "✅ ശുപാർശ ചെയ്യുന്ന വിളകൾ",
+        waitingText: "ഡാറ്റ നൽകുക..."
+      },
+      hi: {
+        mainTitle: "🌾 स्मार्ट एग्री एडवाइजर",
+        formTitle: "🌱 सेंसर डेटा दर्ज करें",
+        labelN: "नाइट्रोजन (N)",
+        labelP: "फॉस्फोरस (P)",
+        labelK: "पोटैशियम (K)",
+        labelTemp: "तापमान (°C)",
+        labelHumidity: "नमी (%)",
+        labelPh: "मिट्टी का pH",
+        labelRainfall: "वर्षा (मिमी)",
+        submitBtn: "🌾 फसल सिफारिश प्राप्त करें",
+        recTitle: "✅ अनुशंसित फसलें",
+        waitingText: "इनपुट की प्रतीक्षा..."
+      }
+    };
+
+    const languageSelect = document.getElementById('languageSelect');
+    languageSelect.addEventListener('change', function() {
+      const lang = this.value;
+      const d = langData[lang];
+      document.getElementById('mainTitle').textContent = d.mainTitle;
+      document.getElementById('formTitle').textContent = d.formTitle;
+      document.getElementById('labelN').textContent = d.labelN;
+      document.getElementById('labelP').textContent = d.labelP;
+      document.getElementById('labelK').textContent = d.labelK;
+      document.getElementById('labelTemp').textContent = d.labelTemp;
+      document.getElementById('labelHumidity').textContent = d.labelHumidity;
+      document.getElementById('labelPh').textContent = d.labelPh;
+      document.getElementById('labelRainfall').textContent = d.labelRainfall;
+      document.getElementById('submitBtn').textContent = d.submitBtn;
+      document.getElementById('recTitle').textContent = d.recTitle;
+      document.getElementById('waitingText').textContent = d.waitingText;
+    });
+
+    // Set default language on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const lang = languageSelect.value || 'en';
+      const d = langData[lang];
+      document.getElementById('mainTitle').textContent = d.mainTitle;
+      document.getElementById('formTitle').textContent = d.formTitle;
+      document.getElementById('labelN').textContent = d.labelN;
+      document.getElementById('labelP').textContent = d.labelP;
+      document.getElementById('labelK').textContent = d.labelK;
+      document.getElementById('labelTemp').textContent = d.labelTemp;
+      document.getElementById('labelHumidity').textContent = d.labelHumidity;
+      document.getElementById('labelPh').textContent = d.labelPh;
+      document.getElementById('labelRainfall').textContent = d.labelRainfall;
+      document.getElementById('submitBtn').textContent = d.submitBtn;
+      document.getElementById('recTitle').textContent = d.recTitle;
+      document.getElementById('waitingText').textContent = d.waitingText;
+    });
+  </script>
+</body>
+</html>

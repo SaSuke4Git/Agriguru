@@ -1,0 +1,199 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #e0ffe0, #f3fff3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 1100px;
+  width: 90%;
+}
+
+h1, h2 {
+  color: #2e7d32;
+  text-align: center;
+}
+
+.main-flex {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.form-section, .recommendation {
+  flex: 1;
+  min-width: 300px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(46, 125, 50, 0.07);
+  padding: 20px 18px;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.form-section:hover, .recommendation:hover {
+  box-shadow: 0 6px 24px rgba(46, 125, 50, 0.13);
+  transform: translateY(-4px) scale(1.01);
+}
+
+.form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-section label {
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+input, button {
+  width: 80%;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+}
+
+button {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  transition: background 0.3s, transform 0.2s;
+  cursor: pointer;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #38f9d7 0%, #43e97b 100%);
+  transform: scale(1.04);
+}
+
+.recommendation {
+  background: #f9fff9;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.07);
+}
+
+.card-list p {
+  color: #888;
+  text-align: center;
+}
+
+.enhanced-container {
+  border: 3px solid;
+  border-image: linear-gradient(120deg, #a8ff78, #78ffd6, #f3e7e9) 1;
+  box-shadow: 0 12px 40px rgba(46, 125, 50, 0.15), 0 1.5px 8px rgba(0,0,0,0.06);
+  transition: box-shadow 0.3s;
+  animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.crop-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.09);
+  margin: 12px 0;
+  padding: 14px 10px;
+  text-align: center;
+  transition: box-shadow 0.3s, transform 0.3s;
+  opacity: 0;
+  animation: cardFadeIn 0.7s forwards;
+}
+
+.crop-card img {
+  width: 320px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.13);
+}
+
+/* Theme toggle and language select */
+.theme-toggle {
+  position: absolute;
+  top: 18px;
+  right: 40px;
+  z-index: 10;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.theme-toggle button {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.theme-toggle button:hover {
+  background: #444;
+}
+.theme-toggle select {
+  background: #fff;
+  color: #222;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  transition: background 0.3s, color 0.3s;
+}
+body.dark-mode .theme-toggle select {
+  background: #23272b;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background: linear-gradient(to right, #232526, #414345);
+  color: #e0e0e0;
+}
+body.dark-mode .container {
+  background: #23272b;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+body.dark-mode h1, 
+body.dark-mode h2 {
+  color: #90ee90;
+}
+body.dark-mode .form-section,
+body.dark-mode .recommendation {
+  background: rgba(30,32,34,0.97);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+body.dark-mode input, 
+body.dark-mode button {
+  background: #23272b;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+body.dark-mode .crop-card {
+  background: #23272b;
+  color: #e0e0e0;
+}
+body.dark-mode .card-list p {
+  color: #aaa;
+}

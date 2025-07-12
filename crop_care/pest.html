@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriGuru pest finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e9f5ee 0%, #b7e4c7 100%);
+      color: #234d20;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    header {
+      width: 100%;
+      background: #234d20;
+      color: #fff;
+      padding: 1.5rem 0 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-size: 2.5rem;
+      margin-right: 1rem;
+    }
+    .title {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(34,77,32,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.7s ease;
+    }
+
+    label {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.7rem;
+      color: #234d20;
+      align-self: flex-start;
+    }
+
+    input {
+      padding: 0.9rem 1rem;
+      font-size: 1.1rem;
+      border: 1.5px solid #b7e4c7;
+      border-radius: 8px;
+      width: 100%;
+      margin-bottom: 1.2rem;
+      background: #f7fafc;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus {
+      border-color: #234d20;
+    }
+
+    button {
+      padding: 0.8rem 2rem;
+      background: linear-gradient(90deg, #38b000 0%, #6a994e 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(34,77,32,0.08);
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #234d20 0%, #6a994e 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    #output {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      background: #f7fafc;
+      padding: 1.5rem 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(34,77,32,0.07);
+      width: 100%;
+      animation: fadeIn 0.7s ease-in-out;
+      min-height: 60px;
+    }
+    #output h2 {
+      color: #38b000;
+      font-size: 1.3rem;
+      margin-bottom: 0.7rem;
+    }
+    #output p {
+      margin: 0.5rem 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      width: 100%;
+      background: #234d20;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">🌾</span>
+    <span class="title">AgriGuru Crop Care</span>
+  </header>
+  <main style="width:100%;display:flex;flex-direction:column;align-items:center;">
+    <div class="container">
+      <label for="cropInput">Enter crop name:</label>
+      <input type="text" id="cropInput" placeholder="e.g. rice, tomato, wheat..." />
+      <button onclick="showRecommendations()">Get Treatments</button>
+      <div id="output"></div>
+    </div>
+  </main>
+  <footer>
+    &copy; 2025 AgriGuru Bazaar Connect. All rights reserved.
+  </footer>
+
+  <script>
+    const recommendations = {
+      rice: {
+        pesticide: "Bispyribac-sodium",
+        natural: "Neem oil spray + garlic extract"
+      },
+      tomato: {
+        pesticide: "Imidacloprid",
+        natural: "Chili-garlic spray + wood ash"
+      },
+      wheat: {
+        pesticide: "Clodinafop-propargyl",
+        natural: "Cow dung compost + turmeric spray"
+      },
+      banana: {
+        pesticide: "Chlorpyrifos",
+        natural: "Fermented buttermilk + citrus peel extract"
+      },
+      maize: {
+        pesticide: "Atrazine",
+        natural: "Lemongrass extract + tobacco decoction"
+      },
+      potato: {
+        pesticide: "Mancozeb",
+        natural: "Basil oil spray + crushed mint leaves"
+      },
+      cotton: {
+        pesticide: "Cypermethrin",
+        natural: "Pongamia oil + turmeric paste"
+      },
+      brinjal: {
+        pesticide: "Carbaryl",
+        natural: "Neem seed kernel extract + soapnut solution"
+      },
+      cabbage: {
+        pesticide: "Lambda-cyhalothrin",
+        natural: "Citrus peel extract + vinegar spray"
+      },
+      chili: {
+        pesticide: "Spinosad",
+        natural: "Ginger-garlic paste + cow urine decoction"
+      },
+      onion: {
+        pesticide: "Malathion",
+        natural: "Lemon juice + lemongrass oil"
+      },
+      okra: {
+        pesticide: "Quinalphos",
+        natural: "Basil leaf extract + ash barrier"
+      }
+    };
+
+    function showRecommendations() {
+      const crop = document.getElementById("cropInput").value.toLowerCase().trim();
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+      if (!crop) {
+        output.innerHTML = "<p style='color:#d90429;'>Please enter a crop name.</p>";
+        return;
+      }
+      if (recommendations[crop]) {
+        output.innerHTML = `
+          <h2>🌿 Recommendations for ${crop.charAt(0).toUpperCase() + crop.slice(1)}</h2>
+          <p><strong>Pesticide:</strong> ${recommendations[crop].pesticide}</p>
+          <p><strong>Natural Remedy:</strong> ${recommendations[crop].natural}</p>
+        `;
+      } else {
+        output.innerHTML = "<p style='color:#d90429;'>🚫 Sorry, we don’t have data for that crop. Try another one.</p>";
+      }
+    }
+    document.getElementById("cropInput").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        showRecommendations();
+      }
+    });
+  </script>
+</body>
+</html>
+

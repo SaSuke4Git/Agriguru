@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | AgriGuru</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5fff5;
+      color: #1d4d2b;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #2e7d32;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.2rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #c8facc;
+    }
+
+    .hero {
+      text-align: center;
+      background: linear-gradient(rgba(46,125,50,0.7), rgba(46,125,50,0.7)), url('https://images.unsplash.com/photo-1600431521340-491eca880813?auto=format&fit=crop&w=1950&q=80') no-repeat center/cover;
+      color: white;
+      padding: 5rem 2rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 3rem 2rem;
+    }
+
+    .feature-card {
+      background-color: #e6f4ea;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .feature-card.show {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .feature-card img {
+      width: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: #2d3f2f;
+    }
+
+    footer {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 1.5rem 0;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🌾 AgriGuru</div>
+  </header>
+
+  <section class="hero">
+    <h1>Empowering Farmers, Sustaining the Future</h1>
+    <p>AgriGuru is transforming agriculture with AI, IoT, and human touch.</p>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <img src="https://img.icons8.com/clouds/100/000000/partly-cloudy-day--v2.png" alt="Weather Prediction" />
+      <h2>Weather-Based Crop Prediction</h2>
+      <p>Real-time weather + AI gives the best crop plan for each farm.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/5264/5264922.png" alt="IoT Farming" />
+      <h2>IoT Farming</h2>
+      <p>Affordable sensors for soil, weather, and irrigation. Save water, lower input cost, and boost yield.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://img.icons8.com/fluency/96/000000/phone.png" alt="Manual Recommendation" />
+      <h2>Manual Recommendation</h2>
+      <p>Simple forms + SMS/call centers help farmers without smartphones access expert advice.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://img.icons8.com/color/96/000000/money.png" alt="Insurance Support" />
+      <h2>Insurance & KCC Support</h2>
+      <p>Helping farmers apply for insurance and Kisan Credit Cards using IoT data for faster claims.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.freepik.com/512/14400/14400899.png" alt="Pesticide Helper" />
+      <h2>Pesticide Helper</h2>
+      <p>Suggests safe pesticides and dosages — saving money and health.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://img.icons8.com/color/96/000000/conference-call.png" alt="Expert Wing" />
+      <h2>Expert Scientific Wing</h2>
+      <p>Agri scientists help with soil, pests, and climate issues via webinars and support.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/9198/9198446.png" alt="Marketplace" />
+      <h2>Marketplace — Like Swiggy for Crops</h2>
+      <p>Farmers sell directly with better prices and faster payments. No middlemen.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://img.icons8.com/color/96/000000/tractor.png" alt="Future Vision" />
+      <h2>Future Vision: Owned Farmlands</h2>
+      <p>We lease farmlands, hire farmers with stable incomes, insure crops & share profits.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 AgriGuru. Empowering Every Farmer.</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

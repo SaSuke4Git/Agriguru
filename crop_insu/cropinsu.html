@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriGuru - Crop Insurance Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-green-50 min-h-screen font-sans">
+    <header class="bg-green-600 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <div class="text-2xl font-bold flex items-center">
+                <i class="fas fa-leaf mr-2"></i>
+                <span>AgriGuru</span>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="hover:underline transition duration-300 transform hover:scale-105" id="navHome">Home</a>
+                <a href="#" class="hover:underline transition duration-300 transform hover:scale-105" id="navAbout">About</a>
+                <a href="#" class="hover:underline transition duration-300 transform hover:scale-105" id="navClaims">Claims</a>
+                <a href="#" class="hover:underline transition duration-300 transform hover:scale-105" id="navContact">Contact</a>
+            </nav>
+            <div class="flex items-center">
+                <button id="mobileMenuButton" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <select id="languageSelect" class="ml-6 px-2 py-1 rounded text-green-700 hidden md:block">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                </select>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-green-700 px-6 py-3">
+            <div class="flex flex-col space-y-3">
+                <a href="#" class="text-white hover:underline" id="navHomeMobile">Home</a>
+                <a href="#" class="text-white hover:underline" id="navAboutMobile">About</a>
+                <a href="#" class="text-white hover:underline" id="navClaimsMobile">Claims</a>
+                <a href="#" class="text-white hover:underline" id="navContactMobile">Contact</a>
+                <select id="languageSelectMobile" class="px-2 py-1 rounded text-green-700">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative bg-green-700 bg-opacity-80 text-white text-center py-24" style="background-image: linear-gradient(rgba(5, 150, 105, 0.8), rgba(5, 150, 105, 0.8)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'); background-size: cover; background-position: center;">
+        <div class="container mx-auto px-4 animate__animated animate__fadeIn">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" id="heroTitle">Protect Your Harvest With Comprehensive Crop Insurance</h1>
+            <p class="text-lg md:text-xl mb-8" id="heroSubtitle">Get coverage tailored to your specific crops and farm size</p>
+            <a href="#calculator" class="bg-white text-green-700 px-8 py-3 rounded-full font-semibold hover:bg-green-100 transition duration-300 transform hover:scale-105 inline-block" id="heroButton">Calculate Your Premium</a>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-green-50 to-transparent"></div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-green-700 mb-12" id="featuresTitle">Why Choose AgriGuru?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1 text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-green-700" id="feature1Title">Comprehensive Protection</h3>
+                    <p class="text-gray-600" id="feature1Desc">Coverage against droughts, floods, pests, and other natural calamities that could affect your yield.</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1 text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bolt text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-green-700" id="feature2Title">Fast Claim Processing</h3>
+                    <p class="text-gray-600" id="feature2Desc">Our digital claim system ensures quick processing and settlement within 15 working days.</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 transform hover:-translate-y-1 text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-rupee-sign text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-green-700" id="feature3Title">Affordable Premiums</h3>
+                    <p class="text-gray-600" id="feature3Desc">Government subsidies available to make crop insurance accessible to all farmers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-green-100" id="calculator">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-2xl mx-auto animate__animated animate__fadeInUp">
+                <div class="flex items-center mb-6">
+                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                        <i class="fas fa-calculator text-green-600 text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-green-700" id="calcTitle">Calculate Your Premium</h2>
+                </div>
+                <form id="insuranceForm">
+                    <div class="mb-4">
+                        <label for="hectares" class="block font-medium mb-2 text-gray-700" id="labelHectares">Total Hectares to Insure</label>
+                        <div class="relative">
+                            <input type="number" id="hectares" min="1" step="0.1" required 
+                                   class="w-full border border-gray-300 rounded px-3 py-2 pl-10 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="cropType" class="block font-medium mb-2 text-gray-700" id="labelCropType">Primary Crop Type</label>
+                        <div class="relative">
+                            <select id="cropType" required 
+                                    class="w-full border border-gray-300 rounded px-3 py-2 pl-10 appearance-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                                <option value="" id="optSelectCrop">Select Crop</option>
+                                <option value="wheat" id="optWheat">Wheat</option>
+                                <option value="corn" id="optCorn">Corn/Maize</option>
+                                <option value="rice" id="optRice">Rice</option>
+                                <option value="soybean" id="optSoybean">Soybean</option>
+                                <option value="cotton" id="optCotton">Cotton</option>
+                                <option value="vegetables" id="optVegetables">Vegetables</option>
+                                <option value="fruits" id="optFruits">Fruits</option>
+                                <option value="other" id="optOther">Other Crops</option>
+                            </select>
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="region" class="block font-medium mb-2 text-gray-700" id="labelRegion">Growing Region</label>
+                        <div class="relative">
+                            <select id="region" required 
+                                    class="w-full border border-gray-300 rounded px-3 py-2 pl-10 appearance-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                                <option value="" id="optSelectRegion">Select Region</option>
+                                <option value="north" id="optNorth">Northern Region</option>
+                                <option value="south" id="optSouth">Southern Region</option>
+                                <option value="east" id="optEast">Eastern Region</option>
+                                <option value="west" id="optWest">Western Region</option>
+                                <option value="central" id="optCentral">Central Region</option>
+                            </select>
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="coverage" class="block font-medium mb-2 text-gray-700" id="labelCoverage">Coverage Level</label>
+                        <div class="relative">
+                            <select id="coverage" required 
+                                    class="w-full border border-gray-300 rounded px-3 py-2 pl-10 appearance-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                                <option value="70" id="optCov70">70% (Basic)</option>
+                                <option value="80" selected id="optCov80">80% (Standard)</option>
+                                <option value="90" id="optCov90">90% (Premium)</option>
+                            </select>
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-umbrella"></i>
+                            </div>
+                            <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="history" class="block font-medium mb-2 text-gray-700" id="labelHistory">Previous Claims History</label>
+                        <div class="relative">
+                            <select id="history" required 
+                                    class="w-full border border-gray-300 rounded px-3 py-2 pl-10 appearance-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                                <option value="0" id="optHist0">No previous claims</option>
+                                <option value="1" id="optHist1">1 claim in last 5 years</option>
+                                <option value="2" id="optHist2">2 claims in last 5 years</option>
+                                <option value="3" id="optHist3">3+ claims in last 5 years</option>
+                            </select>
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Private Insurance Section -->
+                    <div class="mb-6">
+                        <label for="privateInsurance" class="block font-medium mb-2 text-gray-700" id="labelPrivate">Private Insurance Provider</label>
+                        <div class="relative">
+                            <select id="privateInsurance" 
+                                    class="w-full border border-gray-300 rounded px-3 py-2 pl-10 appearance-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                                <option value="none" id="optPrivateNone">None (Govt. Only)</option>
+                                <option value="agroplus" id="optAgroplus">AgroPlus Insurance</option>
+                                <option value="farmsecure" id="optFarmsecure">FarmSecure Pvt Ltd</option>
+                                <option value="cropguard" id="optCropguard">CropGuard Solutions</option>
+                            </select>
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div id="privateDetails" class="mt-2 text-sm text-gray-600 p-3 bg-green-50 rounded hidden"></div>
+                    </div>
+                    <button type="submit" class="w-full bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition duration-300 transform hover:scale-105 flex items-center justify-center" id="btnCalc">
+                        <i class="fas fa-calculator mr-2"></i>
+                        <span>Calculate Premium</span>
+                    </button>
+                </form>
+                <div class="result mt-8 p-6 bg-green-50 border-l-4 border-green-600 rounded-lg hidden animate__animated animate__fadeIn" id="result">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-file-invoice-dollar text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-green-700" id="resultTitle">Your Insurance Estimate</h3>
+                            <div class="border-b border-green-200 mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span id="resultPremium">Estimated Premium:</span>
+                            <span id="premiumAmount" class="font-bold text-green-900">$0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span id="resultCoverage">Coverage Details:</span>
+                            <span id="coverageDetails" class="text-right"></span>
+                        </div>
+                        <div id="privateSummary" class="text-sm bg-green-100 p-2 rounded"></div>
+                    </div>
+                    <button id="applyNow" class="w-full bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 mt-6 transition duration-300 transform hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-file-signature mr-2"></i>
+                        <span>Apply Now</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-green-700 mb-12" id="testimonialsTitle">What Farmers Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Farmer" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Rajesh Kumar</h4>
+                            <p class="text-sm text-gray-500">Wheat Farmer, Punjab</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic" id="testimonial1">"AgriGuru's insurance saved me when unexpected rains destroyed my wheat crop. The claim process was quick and hassle-free."</p>
+                    <div class="flex mt-3 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Farmer" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Priya Reddy</h4>
+                            <p class="text-sm text-gray-500">Cotton Farmer, Andhra Pradesh</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic" id="testimonial2">"The premium is affordable and the coverage is comprehensive. I recommend AgriGuru to all my fellow farmers."</p>
+                    <div class="flex mt-3 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Farmer" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Sanjay Patel</h4>
+                            <p class="text-sm text-gray-500">Vegetable Farmer, Gujarat</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic" id="testimonial3">"Excellent service! When pests destroyed my tomato crop, AgriGuru's team guided me through the claim process step by step."</p>
+                    <div class="flex mt-3 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-green-700 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6" id="ctaTitle">Ready to Protect Your Livelihood?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto" id="ctaSubtitle">Join thousands of farmers who trust AgriGuru for their crop insurance needs.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#calculator" class="bg-white text-green-700 px-8 py-3 rounded-full font-semibold hover:bg-green-100 transition duration-300 transform hover:scale-105" id="ctaButton1">Get a Free Quote</a>
+                <a href="#" class="border-2 border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-green-700 transition duration-300 transform hover:scale-105" id="ctaButton2">Call Our Agent</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-green-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-leaf mr-2"></i>
+                        <span>AgriGuru</span>
+                    </h3>
+                    <p class="mb-4" id="footerAbout">Protecting farmers and their harvests since 2010 with affordable and reliable crop insurance solutions.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-green-200 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white hover:text-green-200 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white hover:text-green-200 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white hover:text-green-200 transition"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4" id="footerLinksTitle">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline transition" id="footerLinkHome">Home</a></li>
+                        <li><a href="#" class="hover:underline transition" id="footerLinkAbout">About Us</a></li>
+                        <li><a href="#" class="hover:underline transition" id="footerLinkClaims">File a Claim</a></li>
+                        <li><a href="#" class="hover:underline transition" id="footerLinkContact">Contact</a></li>
+                        <li><a href="#" class="hover:underline transition" id="footerLinkFAQ">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4" id="footerContactTitle">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-300"></i>
+                            <span id="footerAddress">123 Farm Road, Agri City, IN 560001</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2 text-green-300"></i>
+                            <span id="footerPhone">+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-green-300"></i>
+                            <span id="footerEmail">help@agriguru.com</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4" id="footerNewsletterTitle">Newsletter</h4>
+                    <p class="mb-4" id="footerNewsletterDesc">Subscribe to get farming tips and insurance updates.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-3 py-2 text-gray-800 rounded-l focus:outline-none w-full">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-r transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-green-700 mt-8 pt-8 text-center">
+                <p id="footerText">&copy; 2023 AgriGuru Crop Insurance. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            this.innerHTML = menu.classList.contains('hidden') ? 
+                '<i class="fas fa-bars text-xl"></i>' : 
+                '<i class="fas fa-times text-xl"></i>';
+        });
+
+        // Private insurance details
+        const privateInsuranceInfo = {
+            'none': '',
+            'agroplus': 'AgroPlus Insurance: Fast claim settlement, 24/7 support, extra weather risk cover (+10% premium).',
+            'farmsecure': 'FarmSecure Pvt Ltd: Flexible plans, digital claim tracking, free farm health check (+8% premium).',
+            'cropguard': 'CropGuard Solutions: Pest/disease cover, mobile app, expert advice (+12% premium).'
+        };
+        const privateMultipliers = {
+            'none': 1.0,
+            'agroplus': 1.10,
+            'farmsecure': 1.08,
+            'cropguard': 1.12
+        };
+        
+        document.getElementById('privateInsurance').addEventListener('change', function() {
+            const val = this.value;
+            const detailsEl = document.getElementById('privateDetails');
+            detailsEl.textContent = privateInsuranceInfo[val];
+            if(val !== 'none') {
+                detailsEl.classList.remove('hidden');
+            } else {
+                detailsEl.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('insuranceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const hectares = parseFloat(document.getElementById('hectares').value);
+            const cropType = document.getElementById('cropType').value;
+            const region = document.getElementById('region').value;
+            const coverage = parseInt(document.getElementById('coverage').value);
+            const history = parseInt(document.getElementById('history').value);
+            const privateProvider = document.getElementById('privateInsurance').value;
+            
+            // Validate inputs
+            if(!hectares || !cropType || !region) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            // Base rates per hectare by crop type (in USD)
+            const baseRates = {
+                'wheat': 25,
+                'corn': 30,
+                'rice': 28,
+                'soybean': 27,
+                'cotton': 32,
+                'vegetables': 40,
+                'fruits': 45,
+                'other': 35
+            };
+            
+            // Regional multipliers
+            const regionMultipliers = {
+                'north': 1.1,
+                'south': 0.9,
+                'east': 1.0,
+                'west': 1.2,
+                'central': 1.0
+            };
+            
+            // Coverage multipliers
+            const coverageMultipliers = {
+                70: 0.8,
+                80: 1.0,
+                90: 1.3
+            };
+            
+            // Claims history multipliers
+            const historyMultipliers = [1.0, 1.1, 1.25, 1.5];
+            
+            // Calculate premium
+            let premium = hectares * baseRates[cropType];
+            premium *= regionMultipliers[region];
+            premium *= coverageMultipliers[coverage];
+            premium *= historyMultipliers[history];
+            premium *= privateMultipliers[privateProvider];
+            
+            // Format crop name for display
+            const cropNames = {
+                'wheat': 'Wheat',
+                'corn': 'Corn/Maize',
+                'rice': 'Rice',
+                'soybean': 'Soybean',
+                'cotton': 'Cotton',
+                'vegetables': 'Vegetables',
+                'fruits': 'Fruits',
+                'other': 'Other Crops'
+            };
+            
+            // Format region name for display
+            const regionNames = {
+                'north': 'Northern',
+                'south': 'Southern',
+                'east': 'Eastern',
+                'west': 'Western',
+                'central': 'Central'
+            };
+            
+            // Display result with animation
+            const resultEl = document.getElementById('result');
+            document.getElementById('premiumAmount').textContent = '₹' + premium.toFixed(2);
+            document.getElementById('coverageDetails').textContent = `${coverage}% for ${hectares} ha of ${cropNames[cropType]} in ${regionNames[region]} Region`;
+            document.getElementById('privateSummary').textContent = privateProvider !== 'none' ? privateInsuranceInfo[privateProvider] : '';
+            resultEl.classList.remove('hidden');
+            resultEl.classList.add('animate__fadeIn');
+            
+            // Scroll to result
+            setTimeout(() => {
+                resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+        
+        document.getElementById('applyNow').addEventListener('click', function() {
+            // Show a modal or redirect to application page
+            alert('Application process will begin. Our agent will contact you shortly.');
+        });
+        
+        // Language translations
+        const translations = {
+            en: {
+                navHome: "Home", navAbout: "About", navClaims: "Claims", navContact: "Contact",
+                heroTitle: "Protect Your Harvest With Comprehensive Crop Insurance",
+                heroSubtitle: "Get coverage tailored to your specific crops and farm size",
+                heroButton: "Calculate Your Premium",
+                featuresTitle: "Why Choose AgriGuru?",
+                feature1Title: "Comprehensive Protection",
+                feature1Desc: "Coverage against droughts, floods, pests, and other natural calamities that could affect your yield.",
+                feature2Title: "Fast Claim Processing",
+                feature2Desc: "Our digital claim system ensures quick processing and settlement within 15 working days.",
+                feature3Title: "Affordable Premiums",
+                feature3Desc: "Government subsidies available to make crop insurance accessible to all farmers.",
+                calcTitle: "Calculate Your Premium",
+                labelHectares: "Total Hectares to Insure",
+                labelCropType: "Primary Crop Type",
+                optWheat: "Wheat", optCorn: "Corn/Maize", optRice: "Rice", optSoybean: "Soybean", optCotton: "Cotton", optVegetables: "Vegetables", optFruits: "Fruits", optOther: "Other Crops",
+                labelRegion: "Growing Region",
+                optNorth: "Northern Region", optSouth: "Southern Region", optEast: "Eastern Region", optWest: "Western Region", optCentral: "Central Region",
+                labelCoverage: "Coverage Level",
+                optCov70: "70% (Basic)", optCov80: "80% (Standard)", optCov90: "90% (Premium)",
+                labelHistory: "Previous Claims History",
+                optHist0: "No previous claims", optHist1: "1 claim in last 5 years", optHist2: "2 claims in last 5 years", optHist3: "3+ claims in last 5 years",
+                labelPrivate: "Private Insurance Provider",
+                optPrivateNone: "None (Govt. Only)", optAgroplus: "AgroPlus Insurance", optFarmsecure: "FarmSecure Pvt Ltd", optCropguard: "CropGuard Solutions",
+                btnCalc: "Calculate Premium",
+                resultTitle: "Your Insurance Estimate",
+                resultPremium: "Estimated Premium:",
+                resultCoverage: "Coverage Details:",
+                testimonialsTitle: "What Farmers Say",
+                testimonial1: "\"AgriGuru's insurance saved me when unexpected rains destroyed my wheat crop. The claim process was quick and hassle-free.\"",
+                testimonial2: "\"The premium is affordable and the coverage is comprehensive. I recommend AgriGuru to all my fellow farmers.\"",
+                testimonial3: "\"Excellent service! When pests destroyed my tomato crop, AgriGuru's team guided me through the claim process step by step.\"",
+                ctaTitle: "Ready to Protect Your Livelihood?",
+                ctaSubtitle: "Join thousands of farmers who trust AgriGuru for their crop insurance needs.",
+                ctaButton1: "Get a Free Quote",
+                ctaButton2: "Call Our Agent",
+                footerAbout: "Protecting farmers and their harvests since 2010 with affordable and reliable crop insurance solutions.",
+                footerLinksTitle: "Quick Links",
+                footerLinkHome: "Home", footerLinkAbout: "About Us", footerLinkClaims: "File a Claim", footerLinkContact: "Contact", footerLinkFAQ: "FAQ",
+                footerContactTitle: "Contact Us",
+                footerAddress: "123 Farm Road, Agri City, IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "Newsletter",
+                footerNewsletterDesc: "Subscribe to get farming tips and insurance updates.",
+                footerText: "© 2023 AgriGuru Crop Insurance. All rights reserved.",
+                optSelectCrop: "Select Crop",
+                optSelectRegion: "Select Region"
+            },
+            hi: {
+                navHome: "होम", navAbout: "बारे में", navClaims: "दावे", navContact: "संपर्क करें",
+                heroTitle: "अपने फसल की सुरक्षा के लिए व्यापक बीमा",
+                heroSubtitle: "अपनी फसल और खेत के आकार के अनुसार बीमा प्राप्त करें",
+                heroButton: "अपना प्रीमियम कैलकुलेट करें",
+                featuresTitle: "अग्रीगुरु क्यों चुनें?",
+                feature1Title: "व्यापक सुरक्षा",
+                feature1Desc: "सूखा, बाढ़, कीट और अन्य प्राकृतिक आपदाओं के खिलाफ कवरेज जो आपकी उपज को प्रभावित कर सकते हैं।",
+                feature2Title: "तेज दावा प्रसंस्करण",
+                feature2Desc: "हमारी डिजिटल दावा प्रणाली 15 कार्य दिवसों के भीतर त्वरित प्रसंस्करण और निपटान सुनिश्चित करती है।",
+                feature3Title: "सस्ती प्रीमियम",
+                feature3Desc: "सभी किसानों के लिए फसल बीमा को सुलभ बनाने के लिए सरकारी सब्सिडी उपलब्ध है।",
+                calcTitle: "अपना प्रीमियम कैलकुलेट करें",
+                labelHectares: "बीमा के लिए कुल हेक्टेयर",
+                labelCropType: "मुख्य फसल प्रकार",
+                optWheat: "गेहूं", optCorn: "मक्का", optRice: "चावल", optSoybean: "सोयाबीन", optCotton: "कपास", optVegetables: "सब्जियां", optFruits: "फल", optOther: "अन्य फसलें",
+                labelRegion: "क्षेत्र",
+                optNorth: "उत्तर क्षेत्र", optSouth: "दक्षिण क्षेत्र", optEast: "पूर्व क्षेत्र", optWest: "पश्चिम क्षेत्र", optCentral: "मध्य क्षेत्र",
+                labelCoverage: "कवरेज स्तर",
+                optCov70: "70% (बेसिक)", optCov80: "80% (स्टैंडर्ड)", optCov90: "90% (प्रीमियम)",
+                labelHistory: "पिछला दावा इतिहास",
+                optHist0: "कोई दावा नहीं", optHist1: "पिछले 5 वर्षों में 1 दावा", optHist2: "पिछले 5 वर्षों में 2 दावे", optHist3: "5 वर्षों में 3+ दावे",
+                labelPrivate: "निजी बीमा प्रदाता",
+                optPrivateNone: "कोई नहीं (सरकारी)", optAgroplus: "एग्रोप्लस बीमा", optFarmsecure: "फार्मसिक्योर प्रा. लि.", optCropguard: "क्रॉपगार्ड सॉल्यूशन्स",
+                btnCalc: "प्रीमियम कैलकुलेट करें",
+                resultTitle: "आपका बीमा अनुमान",
+                resultPremium: "अनुमानित प्रीमियम:",
+                resultCoverage: "कवरेज विवरण:",
+                testimonialsTitle: "किसान क्या कहते हैं",
+                testimonial1: "\"अग्रीगुरु के बीमा ने मुझे बचाया जब अप्रत्याशित बारिश ने मेरी गेहूं की फसल को नष्ट कर दिया। दावा प्रक्रिया तेज और परेशानी मुक्त थी।\"",
+                testimonial2: "\"प्रीमियम सस्ता है और कवरेज व्यापक है। मैं अग्रीगुरु की सभी साथी किसानों को सलाह देता हूं।\"",
+                testimonial3: "\"उत्कृष्ट सेवा! जब कीटों ने मेरी टमाटर की फसल को नष्ट कर दिया, तो अग्रीगुरु की टीम ने मुझे दावा प्रक्रिया के माध्यम से कदम दर कदम मार्गदर्शन दिया।\"",
+                ctaTitle: "अपनी आजीविका की रक्षा के लिए तैयार हैं?",
+                ctaSubtitle: "हजारों किसानों में शामिल हों जो अपनी फसल बीमा जरूरतों के लिए अग्रीगुरु पर भरोसा करते हैं।",
+                ctaButton1: "मुफ्त कोट प्राप्त करें",
+                ctaButton2: "हमारे एजेंट को कॉल करें",
+                footerAbout: "2010 से किसानों और उनकी फसलों को सस्ती और विश्वसनीय फसल बीमा समाधानों के साथ सुरक्षित कर रहे हैं।",
+                footerLinksTitle: "त्वरित लिंक",
+                footerLinkHome: "होम", footerLinkAbout: "हमारे बारे में", footerLinkClaims: "दावा दर्ज करें", footerLinkContact: "संपर्क", footerLinkFAQ: "सामान्य प्रश्न",
+                footerContactTitle: "हमसे संपर्क करें",
+                footerAddress: "123 फार्म रोड, एग्री सिटी, IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "न्यूज़लेटर",
+                footerNewsletterDesc: "कृषि युक्तियाँ और बीमा अपडेट प्राप्त करने के लिए सदस्यता लें।",
+                footerText: "© 2023 अग्रीगुरु फसल बीमा। सर्वाधिकार सुरक्षित।",
+                optSelectCrop: "फसल चुनें",
+                optSelectRegion: "क्षेत्र चुनें"
+            },
+            ml: {
+                navHome: "ഹോം", navAbout: "കുറിച്ച്", navClaims: "ക്ലെയിംസ്", navContact: "ബന്ധപ്പെടുക",
+                heroTitle: "നിങ്ങളുടെ വിളയുടെ സംരക്ഷണത്തിന് സമഗ്ര ഇൻഷുറൻസ്",
+                heroSubtitle: "നിങ്ങളുടെ വിളയും ഫാമിന്റെ വലിപ്പവും അനുസരിച്ച് ഇൻഷുറൻസ് നേടൂ",
+                heroButton: "നിങ്ങളുടെ പ്രീമിയം കണക്കാക്കുക",
+                featuresTitle: "എന്തുകൊണ്ട് അഗ്രിഗുരു?",
+                feature1Title: "സമഗ്ര സംരക്ഷണം",
+                feature1Desc: "വരൾച്ച, വെള്ളപ്പൊക്കം, കീടങ്ങൾ, മറ്റ് പ്രകൃതി ദുരന്തങ്ങൾ എന്നിവയ്ക്കെതിരെയുള്ള കവറേജ്.",
+                feature2Title: "ദ്രുത ക്ലെയിം പ്രോസസ്സിംഗ്",
+                feature2Desc: "ഞങ്ങളുടെ ഡിജിറ്റൽ ക്ലെയിം സിസ്റ്റം 15 പ്രവൃത്തി ദിവസങ്ങൾക്കുള്ളിൽ പ്രോസസ്സിംഗും സെറ്റിൽമെന്റും ഉറപ്പാക്കുന്നു.",
+                feature3Title: "വിലകുറഞ്ഞ പ്രീമിയം",
+                feature3Desc: "എല്ലാ കർഷകർക്കും ഫസൽ ഇൻഷുറൻസ് ലഭ്യമാക്കാൻ സർക്കാർ സബ്സിഡി ലഭ്യമാണ്.",
+                calcTitle: "നിങ്ങളുടെ പ്രീമിയം കണക്കാക്കുക",
+                labelHectares: "ഇൻഷുറൻസിനുള്ള മൊത്തം ഹെക്ടർ",
+                labelCropType: "പ്രധാന വിളയുടെ തരം",
+                optWheat: "ഗോതമ്പ്", optCorn: "ചോളം", optRice: "അരി", optSoybean: "സോയാബീൻ", optCotton: "കപ്പ", optVegetables: "പച്ചക്കറികൾ", optFruits: "ഫലങ്ങൾ", optOther: "മറ്റ് വിളകൾ",
+                labelRegion: "പ്രദേശം",
+                optNorth: "വടക്കൻ പ്രദേശം", optSouth: "തെക്കൻ പ്രദേശം", optEast: "കിഴക്കൻ പ്രദേശം", optWest: "പടിഞ്ഞാറൻ പ്രദേശം", optCentral: "മധ്യ പ്രദേശം",
+                labelCoverage: "കവറേജ് ലെവൽ",
+                optCov70: "70% (ബേസിക്)", optCov80: "80% (സ്റ്റാൻഡേർഡ്)", optCov90: "90% (പ്രീമിയം)",
+                labelHistory: "മുൻ ക്ലെയിംസ് ചരിത്രം",
+                optHist0: "മുൻ ക്ലെയിംസ് ഇല്ല", optHist1: "5 വർഷത്തിൽ 1 ക്ലെയിം", optHist2: "5 വർഷത്തിൽ 2 ക്ലെയിംസ്", optHist3: "5 വർഷത്തിൽ 3+ ക്ലെയിംസ്",
+                labelPrivate: "പ്രൈവറ്റ് ഇൻഷുറൻസ് പ്രൊവൈഡർ",
+                optPrivateNone: "ഒന്നുമില്ല (സർക്കാർ മാത്രം)", optAgroplus: "അഗ്രോപ്ലസ് ഇൻഷുറൻസ്", optFarmsecure: "ഫാംസിക്യൂര്‍ പ്രൈവറ്റ് ലിമിറ്റഡ്", optCropguard: "ക്രോപ്പ്‌ഗാർഡ് സൊല്യൂഷൻസ്",
+                btnCalc: "പ്രീമിയം കണക്കാക്കുക",
+                resultTitle: "നിങ്ങളുടെ ഇൻഷുറൻസ് കണക്ക്",
+                resultPremium: "അനുമാനിച്ച പ്രീമിയം:",
+                resultCoverage: "കവറേജ് വിശദാംശങ്ങൾ:",
+                testimonialsTitle: "കർഷകർ എന്താണ് പറയുന്നത്",
+                testimonial1: "\"അപ്രതീക്ഷിതമായ മഴ എന്റെ ഗോതമ്പ് വിള നശിപ്പിച്ചപ്പോൾ അഗ്രിഗുരുവിന്റെ ഇൻഷുറൻസ് എന്നെ രക്ഷപ്പെടുത്തി. ക്ലെയിം പ്രക്രിയ വേഗത്തിലും എളുപ്പത്തിലും ആയിരുന്നു.\"",
+                testimonial2: "\"പ്രീമിയം വിലകുറഞ്ഞതും കവറേജ് സമഗ്രവുമാണ്. എന്റെ സഹ കർഷകരെല്ലാം അഗ്രിഗുരു ഉപയോഗിക്കാൻ ഞാൻ ശുപാർശ ചെയ്യുന്നു.\"",
+                testimonial3: "\"മികച്ച സേവനം! കീടങ്ങൾ എന്റെ തക്കാളി വിള നശിപ്പിച്ചപ്പോൾ, അഗ്രിഗുരു ടീം ക്ലെയിം പ്രക്രിയയിലൂടെ എന്നെ ഘട്ടം ഘട്ടമായി നയിച്ചു.\"",
+                ctaTitle: "നിങ്ങളുടെ ജീവിതം സംരക്ഷിക്കാൻ തയ്യാറാണോ?",
+                ctaSubtitle: "അഗ്രിഗുരുവിൽ വിശ്വസിക്കുന്ന ആയിരക്കണക്കിന് കർഷകരോടൊപ്പം ചേരൂ.",
+                ctaButton1: "സൗജന്യ ഉദ്ധരണി നേടുക",
+                ctaButton2: "ഞങ്ങളുടെ ഏജന്റിനെ വിളിക്കുക",
+                footerAbout: "2010 മുതൽ കർഷകരെയും അവരുടെ വിളകളെയും വിലകുറഞ്ഞതും വിശ്വസനീയവുമായ ഫസൽ ഇൻഷുറൻസ് പരിഹാരങ്ങൾ ഉപയോഗിച്ച് സംരക്ഷിക്കുന്നു.",
+                footerLinksTitle: "ദ്രുത ലിങ്കുകൾ",
+                footerLinkHome: "ഹോം", footerLinkAbout: "ഞങ്ങളെക്കുറിച്ച്", footerLinkClaims: "ക്ലെയിം ഫയൽ ചെയ്യുക", footerLinkContact: "ബന്ധപ്പെടുക", footerLinkFAQ: "പതിവുചോദ്യങ്ങൾ",
+                footerContactTitle: "ഞങ്ങളെ ബന്ധപ്പെടുക",
+                footerAddress: "123 ഫാം റോഡ്, അഗ്രി സിറ്റി, IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "ന്യൂസ് ലെറ്റർ",
+                footerNewsletterDesc: "കൃഷി ടിപ്പുകളും ഇൻഷുറൻസ് അപ്ഡേറ്റുകളും ലഭിക്കാൻ സബ്‌സ്‌ക്രൈബുചെയ്യുക.",
+                footerText: "© 2023 അഗ്രിഗുരു ഫസൽ ഇൻഷുറൻസ്. എല്ലാ അവകാശങ്ങളും സംരക്ഷിച്ചിരിക്കുന്നു.",
+                optSelectCrop: "വിള തിരഞ്ഞെടുക്കുക",
+                optSelectRegion: "പ്രദേശം തിരഞ്ഞെടുക്കുക"
+            },
+            kn: {
+                navHome: "ಮುಖಪುಟ", navAbout: "ಬಗ್ಗೆ", navClaims: "ಹಕ್ಕುಗಳು", navContact: "ಸಂಪರ್ಕಿಸಿ",
+                heroTitle: "ನಿಮ್ಮ ಬೆಳೆ ರಕ್ಷಣೆಗಾಗಿ ಸಮಗ್ರ ವಿಮೆ",
+                heroSubtitle: "ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಹಕ್ಕುಗಳ ಗಾತ್ರಕ್ಕೆ ಅನುಗುಣವಾಗಿ ವಿಮೆ ಪಡೆಯಿರಿ",
+                heroButton: "ನಿಮ್ಮ ಪ್ರೀಮಿಯಂ ಲೆಕ್ಕಿಸಿ",
+                featuresTitle: "ಏಕೆ ಅಗ್ರಿಗುರು?",
+                feature1Title: "ಸಮಗ್ರ ರಕ್ಷಣೆ",
+                feature1Desc: "ಬರ, ಪ್ರವಾಹ, ಕೀಟಗಳು ಮತ್ತು ಇತರ ನೈಸರ್ಗಿಕ ವಿಪತ್ತುಗಳ ವಿರುದ್ಧ ಕವರೇಜ್.",
+                feature2Title: "ತ್ವರಿತ ಹಕ್ಕು ಸಂಸ್ಕರಣೆ",
+                feature2Desc: "ನಮ್ಮ ಡಿಜಿಟಲ್ ಹಕ್ಕು ವ್ಯವಸ್ಥೆ 15 ಕೆಲಸದ ದಿನಗಳೊಳಗೆ ತ್ವರಿತ ಸಂಸ್ಕರಣೆ ಮತ್ತು ತೀರ್ಮಾನವನ್ನು ಖಾತ್ರಿಪಡಿಸುತ್ತದೆ.",
+                feature3Title: "ಸಾಧಾರಣ ಪ್ರೀಮಿಯಂ",
+                feature3Desc: "ಎಲ್ಲಾ ರೈತರಿಗೆ ಬೆಳೆ ವಿಮೆ ಸುಲಭವಾಗುವಂತೆ ಸರ್ಕಾರದ ಸಬ್ಸಿಡಿ ಲಭ್ಯವಿದೆ.",
+                calcTitle: "ನಿಮ್ಮ ಪ್ರೀಮಿಯಂ ಲೆಕ್ಕಿಸಿ",
+                labelHectares: "ವಿಮೆಗಾಗಿ ಒಟ್ಟು ಹೆಕ್ಟೇರ್",
+                labelCropType: "ಪ್ರಮುಖ ಬೆಳೆ ಪ್ರಕಾರ",
+                optWheat: "ಗೋಧಿ", optCorn: "ಮೆಕ್ಕೆಜೋಳ", optRice: "ಅಕ್ಕಿ", optSoybean: "ಸೋಯಾಬೀನ್", optCotton: "ಹತ್ತಿ", optVegetables: "ತರಕಾರಿಗಳು", optFruits: "ಹಣ್ಣುಗಳು", optOther: "ಇತರೆ ಬೆಳೆಗಳು",
+                labelRegion: "ಪ್ರದೇಶ",
+                optNorth: "ಉತ್ತರ ಪ್ರದೇಶ", optSouth: "ದಕ್ಷಿಣ ಪ್ರದೇಶ", optEast: "ಪೂರ್ವ ಪ್ರದೇಶ", optWest: "ಪಶ್ಚಿಮ ಪ್ರದೇಶ", optCentral: "ಮಧ್ಯ ಪ್ರದೇಶ",
+                labelCoverage: "ಕವರೆಜ್ ಮಟ್ಟ",
+                optCov70: "70% (ಮೂಲ)", optCov80: "80% (ಮಾನಕ)", optCov90: "90% (ಪ್ರೀಮಿಯಂ)",
+                labelHistory: "ಹಿಂದಿನ ಹಕ್ಕುಗಳ ಇತಿಹಾಸ",
+                optHist0: "ಹಿಂದಿನ ಹಕ್ಕುಗಳಿಲ್ಲ", optHist1: "5 ವರ್ಷಗಳಲ್ಲಿ 1 ಹಕ್ಕು", optHist2: "5 ವರ್ಷಗಳಲ್ಲಿ 2 ಹಕ್ಕುಗಳು", optHist3: "5 ವರ್ಷಗಳಲ್ಲಿ 3+ ಹಕ್ಕುಗಳು",
+                labelPrivate: "ಖಾಸಗಿ ವಿಮೆ ಪೂರೈಕೆದಾರ",
+                optPrivateNone: "ಯಾವುದೂ ಇಲ್ಲ (ಸರ್ಕಾರಿ ಮಾತ್ರ)", optAgroplus: "ಅಗ್ರೋಪ್ಲಸ್ ವಿಮೆ", optFarmsecure: "ಫಾರ್ಮ್‌ಸಿಕ್ಯೂರ್ ಪ್ರೈ. ಲಿ.", optCropguard: "ಕ್ರಾಪ್‌ಗಾರ್ಡ್ ಸೊಲ್ಯೂಶನ್ಸ್",
+                btnCalc: "ಪ್ರೀಮಿಯಂ ಲೆಕ್ಕಿಸಿ",
+                resultTitle: "ನಿಮ್ಮ ವಿಮೆ ಅಂದಾಜು",
+                resultPremium: "ಅಂದಾಜು ಪ್ರೀಮಿಯಂ:",
+                resultCoverage: "ಕವರೆಜ್ ವಿವರಗಳು:",
+                testimonialsTitle: "ರೈತರು ಏನು ಹೇಳುತ್ತಾರೆ",
+                testimonial1: "\"ಅನಿರೀಕ್ಷಿತ ಮಳೆ ನನ್ನ ಗೋಧಿ ಬೆಳೆಯನ್ನು ನಾಶಪಡಿಸಿದಾಗ ಅಗ್ರಿಗುರುವಿನ ವಿಮೆ ನನ್ನನ್ನು ರಕ್ಷಿಸಿತು. ಹಕ್ಕು ಪ್ರಕ್ರಿಯೆ ತ್ವರಿತ ಮತ್ತು ತೊಂದರೆರಹಿತವಾಗಿತ್ತು.\"",
+                testimonial2: "\"ಪ್ರೀಮಿಯಂ ಸಾಧಾರಣ ಮತ್ತು ಕವರೇಜ್ ಸಮಗ್ರವಾಗಿದೆ. ನನ್ನ ಎಲ್ಲಾ ಸಹ ರೈತರಿಗೆ ಅಗ್ರಿಗುರುವನ್ನು ನಾನು ಶಿಫಾರಸು ಮಾಡುತ್ತೇನೆ.\"",
+                testimonial3: "\"ಅತ್ಯುತ್ತಮ ಸೇವೆ! ಕೀಟಗಳು ನನ್ನ ಟೊಮೇಟೊ ಬೆಳೆಯನ್ನು ನಾಶಪಡಿಸಿದಾಗ, ಅಗ್ರಿಗುರು ತಂಡವು ಹಕ್ಕು ಪ್ರಕ್ರಿಯೆಯ ಮೂಲಕ ಹಂತ ಹಂತವಾಗಿ ನನ್ನನ್ನು ಮಾರ್ಗದರ್ಶನ ಮಾಡಿತು.\"",
+                ctaTitle: "ನಿಮ್ಮ ಜೀವನೋಪಾಯವನ್ನು ರಕ್ಷಿಸಲು ಸಿದ್ಧರಿದ್ದೀರಾ?",
+                ctaSubtitle: "ತಮ್ಮ ಬೆಳೆ ವಿಮೆ ಅಗತ್ಯಗಳಿಗಾಗಿ ಅಗ್ರಿಗುರುವನ್ನು ನಂಬಿರುವ ಸಾವಿರಾರು ರೈತರೊಂದಿಗೆ ಸೇರಿಕೊಳ್ಳಿ.",
+                ctaButton1: "ಉಚಿತ ಉದ್ಧರಣಿ ಪಡೆಯಿರಿ",
+                ctaButton2: "ನಮ್ಮ ಏಜೆಂಟ್ ಅನ್ನು ಕರೆ ಮಾಡಿ",
+                footerAbout: "2010 ರಿಂದ ರೈತರು ಮತ್ತು ಅವರ ಬೆಳೆಗಳನ್ನು ಸಾಧಾರಣ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ ಬೆಳೆ ವಿಮೆ ಪರಿಹಾರಗಳೊಂದಿಗೆ ರಕ್ಷಿಸುತ್ತಿದೆ.",
+                footerLinksTitle: "ತ್ವರಿತ ಲಿಂಕ್ಗಳು",
+                footerLinkHome: "ಮುಖಪುಟ", footerLinkAbout: "ನಮ್ಮ ಬಗ್ಗೆ", footerLinkClaims: "ಹಕ್ಕು ದಾಖಲಿಸಿ", footerLinkContact: "ಸಂಪರ್ಕಿಸಿ", footerLinkFAQ: "ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳು",
+                footerContactTitle: "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ",
+                footerAddress: "123 ಫಾರ್ಮ್ ರೋಡ್, ಅಗ್ರಿ ಸಿಟಿ, IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "ವಾರ್ತಾಪತ್ರಿಕೆ",
+                footerNewsletterDesc: "ಕೃಷಿ ಸಲಹೆಗಳು ಮತ್ತು ವಿಮೆ ನವೀಕರಣಗಳನ್ನು ಪಡೆಯಲು ಚಂದಾದಾರರಾಗಿ.",
+                footerText: "© 2023 ಅಗ್ರಿಗುರು ಬೆಳೆ ವಿಮೆ. ಎಲ್ಲಾ ಹಕ್ಕುಗಳು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.",
+                optSelectCrop: "ಬೆಳೆ ಆಯ್ಕೆಮಾಡಿ",
+                optSelectRegion: "ಪ್ರದೇಶ ಆಯ್ಕೆಮಾಡಿ"
+            },
+            te: {
+                navHome: "హోమ్", navAbout: "గురించి", navClaims: "క్లెయిమ్స్", navContact: "సంప్రదించండి",
+                heroTitle: "మీ పంట రక్షణకు సమగ్ర బీమా",
+                heroSubtitle: "మీ పంట మరియు వ్యవసాయ పరిమాణానికి అనుగుణంగా బీమా పొందండి",
+                heroButton: "మీ ప్రీమియం లెక్కించండి",
+                featuresTitle: "ఎందుకు అగ్రిగురు?",
+                feature1Title: "సమగ్ర రక్షణ",
+                feature1Desc: "ఎండ, వరదలు, కీటకాలు మరియు ఇతర ప్రకృతి విపత్తులకు వ్యతిరేకంగా కవరేజ్.",
+                feature2Title: "త్వరిత క్లెయిం ప్రాసెసింగ్",
+                feature2Desc: "మా డిజిటల్ క్లెయిం సిస్టమ్ 15 పని దినాలలో త్వరిత ప్రాసెసింగ్ మరియు సెటిల్మెంట్‌ను నిర్ధారిస్తుంది.",
+                feature3Title: "సరసమైన ప్రీమియం",
+                feature3Desc: "అన్ని రైతులకు క్రాప్ ఇన్సూరెన్స్ అందుబాటులో ఉండటానికి ప్రభుత్వ సబ్సిడీ అందుబాటులో ఉంది.",
+                calcTitle: "మీ ప్రీమియం లెక్కించండి",
+                labelHectares: "బీమాకు మొత్తం హెక్టార్లు",
+                labelCropType: "ప్రధాన పంట రకం",
+                optWheat: "గోధుమ", optCorn: "మక్కజొన్న", optRice: "బియ్యం", optSoybean: "సోయాబీన్", optCotton: "పత్తి", optVegetables: "కూరగాయలు", optFruits: "పండ్లు", optOther: "ఇతర పంటలు",
+                labelRegion: "ప్రాంతం",
+                optNorth: "ఉత్తర ప్రాంతం", optSouth: "దక్షిణ ప్రాంతం", optEast: "తూర్పు ప్రాంతం", optWest: "పడమటి ప్రాంతం", optCentral: "మధ్య ప్రాంతం",
+                labelCoverage: "కవరేజ్ స్థాయి",
+                optCov70: "70% (బేసిక్)", optCov80: "80% (స్టాండర్డ్)", optCov90: "90% (ప్రీమియం)",
+                labelHistory: "మునుపటి క్లెయిమ్స్ చరిత్ర",
+                optHist0: "మునుపటి క్లెయిమ్స్ లేవు", optHist1: "5 సంవత్సరాల్లో 1 క్లెయిమ్", optHist2: "5 సంవత్సరాల్లో 2 క్లెయిమ్స్", optHist3: "5 సంవత్సరాల్లో 3+ క్లెయిమ్స్",
+                labelPrivate: "ప్రైవేట్ బీమా ప్రొవైడర్",
+                optPrivateNone: "ఏదీ లేదు (ప్రభుత్వం మాత్రమే)", optAgroplus: "అగ్రోప్లస్ బీమా", optFarmsecure: "ఫార్మ్‌సిక్యూర్ ప్రైవేట్ లిమిటెడ్", optCropguard: "క్రాప్‌గార్డ్ సొల్యూషన్స్",
+                btnCalc: "ప్రీమియం లెక్కించండి",
+                resultTitle: "మీ బీమా అంచనా",
+                resultPremium: "అంచనా ప్రీమియం:",
+                resultCoverage: "కవరేజ్ వివరాలు:",
+                testimonialsTitle: "రైతులు ఏమి చెబుతున్నారు",
+                testimonial1: "\"ఊహించని వర్షాలు నా గోధుమ పంటను నాశనం చేసినప్పుడు అగ్రిగురు బీమా నన్ను రక్షించింది. క్లెయిం ప్రక్రియ త్వరితగతిన మరియు ఇబ్బంది లేకుండా జరిగింది.\"",
+                testimonial2: "\"ప్రీమియం సరసమైనది మరియు కవరేజ్ సమగ్రమైనది. నా అన్ని సహ రైతులకు అగ్రిగురును నేను సిఫార్సు చేస్తున్నాను.\"",
+                testimonial3: "\"అద్భుతమైన సేవ! కీటకాలు నా టమోటా పంటను నాశనం చేసినప్పుడు, అగ్రిగురు బృందం క్లెయిం ప్రక్రియ ద్వారా నన్ను దశలవారీగా మార్గనిర్దేశం చేసింది.\"",
+                ctaTitle: "మీ జీవనోపాధిని రక్షించడానికి సిద్ధంగా ఉన్నారా?",
+                ctaSubtitle: "తమ పంట బీమా అవసరాలకు అగ్రిగురును నమ్మే వేలాది రైతులతో చేరండి.",
+                ctaButton1: "ఉచిత కోట్ పొందండి",
+                ctaButton2: "మా ఏజెంట్‌ను కాల్ చేయండి",
+                footerAbout: "2010 నుండి రైతులు మరియు వారి పంటలను సరసమైన మరియు విశ్వసనీయమైన క్రాప్ ఇన్సూరెన్స్ పరిష్కారాలతో రక్షిస్తోంది.",
+                footerLinksTitle: "త్వరిత లింకులు",
+                footerLinkHome: "హోమ్", footerLinkAbout: "మా గురించి", footerLinkClaims: "క్లెయిం ఫైల్ చేయండి", footerLinkContact: "సంప్రదించండి", footerLinkFAQ: "తరచుగా అడిగే ప్రశ్నలు",
+                footerContactTitle: "మమ్మల్ని సంప్రదించండి",
+                footerAddress: "123 ఫార్మ్ రోడ్, అగ్రి సిటీ, IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "న్యూస్ లెటర్",
+                footerNewsletterDesc: "వ్యవసాయ చిట్కాలు మరియు బీమా నవీకరణలను పొందడానికి సభ్యత్వాన్ని పొందండి.",
+                footerText: "© 2023 అగ్రిగురు క్రాప్ ఇన్సూరెన్స్. అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి.",
+                optSelectCrop: "పంటను ఎంచుకోండి",
+                optSelectRegion: "ప్రాంతాన్ని ఎంచుకోండి"
+            },
+            ta: {
+                navHome: "முகப்பு", navAbout: "பற்றி", navClaims: "கிளைம்ஸ்", navContact: "தொடர்பு கொள்ள",
+                heroTitle: "உங்கள் பயிர் பாதுகாப்பிற்கு விரிவான காப்பீடு",
+                heroSubtitle: "உங்கள் பயிரும் பண்ணை அளவிற்கும் ஏற்ப காப்பீடு பெறுங்கள்",
+                heroButton: "உங்கள் பிரீமியம் கணக்கிடுங்கள்",
+                featuresTitle: "ஏன் அக்ரிகுரு?",
+                feature1Title: "விரிவான பாதுகாப்பு",
+                feature1Desc: "வறட்சி, வெள்ளம், பூச்சிகள் மற்றும் பிற இயற்கை பேரழிவுகளுக்கு எதிராக கவரேஜ்.",
+                feature2Title: "விரைவான கிளைம் செயலாக்கம்",
+                feature2Desc: "எங்கள் டிஜிட்டல் கிளைம் அமைப்பு 15 வேலை நாட்களுக்குள் விரைவான செயலாக்கம் மற்றும் தீர்வை உறுதி செய்கிறது.",
+                feature3Title: "மலிவு பிரீமியம்",
+                feature3Desc: "அனைத்து விவசாயிகளுக்கும் பயிர் காப்பீட்டை அணுகும் வகையில் அரசு மானியம் கிடைக்கிறது.",
+                calcTitle: "உங்கள் பிரீமியம் கணக்கிடுங்கள்",
+                labelHectares: "காப்பீடுக்கு மொத்த ஹெக்டேர்",
+                labelCropType: "முதன்மை பயிர் வகை",
+                optWheat: "கோதுமை", optCorn: "மக்காச்சோளம்", optRice: "அரிசி", optSoybean: "சோயாபீன்", optCotton: "பருத்தி", optVegetables: "காய்கறிகள்", optFruits: "பழங்கள்", optOther: "மற்ற பயிர்கள்",
+                labelRegion: "பிராந்தியம்",
+                optNorth: "வட பிராந்தியம்", optSouth: "தென் பிராந்தியம்", optEast: "கிழக்கு பிராந்தியம்", optWest: "மேற்கு பிராந்தியம்", optCentral: "மத்திய பிராந்தியம்",
+                labelCoverage: "கவரேஜ் நிலை",
+                optCov70: "70% (அடிப்படை)", optCov80: "80% (நிலையான)", optCov90: "90% (பிரீமியம்)",
+                labelHistory: "முந்தைய கிளைம்ஸ் வரலாறு",
+                optHist0: "முந்தைய கிளைம்ஸ் இல்லை", optHist1: "5 ஆண்டுகளில் 1 கிளைம்", optHist2: "5 ஆண்டுகளில் 2 கிளைம்ஸ்", optHist3: "5 ஆண்டுகளில் 3+ கிளைம்ஸ்",
+                labelPrivate: "தனியார் காப்பீடு வழங்குநர்",
+                optPrivateNone: "எதுவும் இல்லை (அரசு மட்டும்)", optAgroplus: "அக்ரோப்ளஸ் காப்பீடு", optFarmsecure: "பார்ம்சிக்யூர் பி.வி.டி. லிமிடெட்", optCropguard: "கிராப்கார்ட் சால்யூஷன்ஸ்",
+                btnCalc: "பிரீமியம் கணக்கிடுங்கள்",
+                resultTitle: "உங்கள் காப்பீடு மதிப்பீடு",
+                resultPremium: "மதிப்பிடப்பட்ட பிரீமியம்:",
+                resultCoverage: "கவரேஜ் விவரங்கள்:",
+                testimonialsTitle: "விவசாயிகள் என்ன சொல்கிறார்கள்",
+                testimonial1: "\"எதிர்பாராத மழை என் கோதுமை பயிரை அழித்தபோது அக்ரிகுருவின் காப்பீடு என்னைக் காப்பாற்றியது. கிளைம் செயல்முறை விரைவாகவும் சிரமமின்றியும் இருந்தது.\"",
+                testimonial2: "\"பிரீமியம் மலிவானது மற்றும் கவரேஜ் விரிவானது. எனது அனைத்து சக விவசாயிகளுக்கும் அக்ரிகுருவை நான் பரிந்துரைக்கிறேன்.\"",
+                testimonial3: "\"சிறந்த சேவை! பூச்சிகள் என் தக்காளி பயிரை அழித்தபோது, அக்ரிகுரு குழு கிளைம் செயல்முறை மூலம் என்னை படிப்படியாக வழிநடத்தியது.\"",
+                ctaTitle: "உங்கள் வாழ்வாதாரத்தைப் பாதுகாக்க தயாரா?",
+                ctaSubtitle: "தங்கள் பயிர் காப்பீட்டு தேவைகளுக்காக அக்ரிகுருவை நம்பிய ஆயிரக்கணக்கான விவசாயிகளுடன் இணைந்து கொள்ளுங்கள்.",
+                ctaButton1: "இலவச மேற்கோளைப் பெறுங்கள்",
+                ctaButton2: "எங்கள் முகவரை அழைக்கவும்",
+                footerAbout: "2010 முதல் விவசாயிகள் மற்றும் அவர்களின் பயிர்களை மலிவு மற்றும் நம்பகமான பயிர் காப்பீட்டு தீர்வுகளுடன் பாதுகாக்கிறது.",
+                footerLinksTitle: "விரைவு இணைப்புகள்",
+                footerLinkHome: "முகப்பு", footerLinkAbout: "எங்களைப் பற்றி", footerLinkClaims: "கிளைம் தாக்கல் செய்யவும்", footerLinkContact: "தொடர்பு கொள்ள", footerLinkFAQ: "அடிக்கடி கேட்கப்படும் கேள்விகள்",
+                footerContactTitle: "எங்களைத் தொடர்பு கொள்ள",
+                footerAddress: "123 பண்ணை சாலை, அக்ரி நகரம், IN 560001",
+                footerPhone: "+91 98765 43210",
+                footerEmail: "help@agriguru.com",
+                footerNewsletterTitle: "செய்திமடல்",
+                footerNewsletterDesc: "விவசாய உதவிக்குறிப்புகள் மற்றும் காப்பீட்டு புதுப்பிப்புகளைப் பெற குழுசேரவும்.",
+                footerText: "© 2023 அக்ரிகுரு கிராப் இன்ஷுரன்ஸ். அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டுள்ளன.",
+                optSelectCrop: "பயிரை தேர்ந்தெடுக்கவும்",
+                optSelectRegion: "பிராந்தியத்தை தேர்ந்தெடுக்கவும்"
+            }
+        };
+        
+        function setLanguage(lang) {
+            const t = translations[lang] || translations['en'];
+            for (const key in t) {
+                const elements = document.querySelectorAll(`[id="${key}"]`);
+                elements.forEach(el => {
+                    if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+                        if (el.placeholder) el.placeholder = t[key];
+                    } else {
+                        el.textContent = t[key];
+                    }
+                });
+            }
+            
+            // Update mobile menu items
+            document.getElementById('navHomeMobile').textContent = t.navHome;
+            document.getElementById('navAboutMobile').textContent = t.navAbout;
+            document.getElementById('navClaimsMobile').textContent = t.navClaims;
+            document.getElementById('navContactMobile').textContent = t.navContact;
+        }
+        
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            setLanguage(this.value);
+        });
+        
+        document.getElementById('languageSelectMobile').addEventListener('change', function() {
+            setLanguage(this.value);
+            document.getElementById('languageSelect').value = this.value;
+        });
+        
+        // Initialize with English
+        setLanguage('en');
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.classList.add('animate__fadeInUp');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', animateOnScroll);
+        // Initial check in case elements are already in view
+        animateOnScroll();
+    </script>
+</body>
+</html>
